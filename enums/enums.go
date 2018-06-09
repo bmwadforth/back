@@ -11,8 +11,8 @@ const (
 const (
 	DB_Host     = "localhost"
 	DB_Port     = 5432
-	DB_Username = "postgres"
-	DB_Password = "password"
-	DB_Name     = "postgres"
+	DB_Username = "bmwadforth_admin"
+	DB_Password = "HDURYUR66BEBjdsuif7GHHJGAS"
+	DB_Name     = "bmwadforth"
 	DB_SSLMode  = "disable"
 )

@@ -46,15 +46,9 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("content-type", "application/json")
 	if common.ComparePasswordHash(email, plainPassword) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(models.HttpRepsonse{200, false, "Authorized"})
+		json.NewEncoder(w).Encode(models.HttpRepsonse{200, false, "Authorized", ""})
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(models.HttpRepsonse{401, false, "Unauthorised"})
-	}
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
+		json.NewEncoder(w).Encode(models.HttpRepsonse{401, false, "Unauthorised", ""})
 	}
 }

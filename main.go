@@ -20,6 +20,8 @@ func defineRoutes() *mux.Router {
 	r.HandleFunc("/api/token", controllers.AuthToken).Methods("GET")
 	r.HandleFunc("/api/register", controllers.NewUser).Methods("POST")
 	r.HandleFunc("/api/login", controllers.UserLogin).Methods("POST")
+	r.HandleFunc("/api/articles/all", controllers.GetArticles).Methods("GET")
+	r.HandleFunc("/api/articles/add", controllers.NewArticle).Methods("POST")
 
 	return r
 }

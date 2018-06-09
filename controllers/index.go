@@ -1,11 +1,11 @@
 package controllers
 
 import (
+	"bmwadforth/models"
 	"encoding/json"
 	"html/template"
 	"net/http"
 	"time"
-	"bmwadforth/models"
 )
 
 var tpl *template.Template
@@ -19,12 +19,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.gohtml", 42)
 }
 
-func Test(w http.ResponseWriter, r *http.Request){
-	timeCookie := time.Now();
+func Test(w http.ResponseWriter, r *http.Request) {
+	timeCookie := time.Now()
 	timeCookie.Add(5000)
 	cookie := http.Cookie{"testCookie", "testValue", "/", "localhost", timeCookie, "", 1, true, false, "", nil}
 	http.SetCookie(w, &cookie)
-	json.NewEncoder(w).Encode(models.HttpRepsonse{200, false, "Successfully set the cookie"})
+	json.NewEncoder(w).Encode(models.HttpRepsonse{200, false, "Successfully set the cookie", ""})
 }
 
 func AuthToken(w http.ResponseWriter, r *http.Request) {
