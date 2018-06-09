@@ -9,13 +9,13 @@ import (
 )
 
 func GetArticles(w http.ResponseWriter, r *http.Request) {
-
 	db := common.DBConnect()
 	fmt.Println("# Querying bmwadforth.articles")
 	rows, err := db.Query("SELECT * FROM bmwadforth.articles")
 	checkErr(err)
 
-	var temp models.Blog
+	var blogs []models.Blog
+	defer rows.Close()
 
 	for rows.Next() {
 		var id int
@@ -27,15 +27,16 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 
 		err = rows.Scan(&id, &blog_title, &blog_content, &blog_description, &blog_views, &blog_created)
 		checkErr(err)
-		temp = models.Blog{BlogId: id,
+		temp := models.Blog{BlogId: id,
 			BlogTitle:       blog_title,
 			BlogContent:     blog_content,
 			BlogDescription: blog_description,
 			BlogViews:       blog_views,
 			BlogCreatedAt:   blog_created}
+		blogs = append(blogs, temp)
 	}
 
-	data, _ := json.Marshal(temp)
+	data, _ := json.Marshal(blogs)
 	w.Header().Add("content-type", "application/json")
 	w.Write(data)
 }
