@@ -1,9 +1,9 @@
 package main
 
 import (
-	common "bmwadforth/common"
-	controllers "bmwadforth/controllers"
-	enums "bmwadforth/enums"
+	"bmwadforth/common"
+	"bmwadforth/controllers"
+	"bmwadforth/enums"
 	"fmt"
 	"log"
 	"net/http"
@@ -57,5 +57,6 @@ func main() {
 	}()
 
 	portListen := fmt.Sprintf(":%d", enums.WEB_Port)
+
 	log.Fatal(http.ListenAndServe(portListen, r))
 }

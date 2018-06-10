@@ -1,0 +1,46 @@
+create schema bmwadforth
+;
+
+create sequence articles_id_seq
+	as integer
+	maxvalue 2147483647
+;
+
+create sequence users_id_seq
+	as integer
+	maxvalue 2147483647
+;
+
+create table articles
+(
+	id serial not null
+		constraint articles_pkey
+			primary key,
+	blog_title varchar,
+	blog_content varchar,
+	blog_description varchar,
+	blog_views integer default 0,
+	blog_image varchar default ''::character varying,
+	blog_created timestamp default now() not null
+)
+;
+
+create unique index articles_id_uindex
+	on articles (id)
+;
+
+create table users
+(
+	id serial not null
+		constraint users_pkey
+			primary key,
+	username varchar,
+	password varchar,
+	user_created timestamp default now()
+)
+;
+
+create unique index users_id_uindex
+	on users (id)
+;
+

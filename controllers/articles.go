@@ -6,13 +6,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"bmwadforth/util"
 )
 
 func GetArticles(w http.ResponseWriter, r *http.Request) {
 	db := common.DBConnect()
+	w.Header().Add("access-control-allow-origin", "http://localhost:3000")
 	fmt.Println("# Querying bmwadforth.articles")
 	rows, err := db.Query("SELECT * FROM bmwadforth.articles")
-	checkErr(err)
+	util.CheckErr(err)
 
 	var blogs []models.Blog
 	defer rows.Close()
@@ -23,15 +25,17 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		var blog_content string
 		var blog_description string
 		var blog_views string
+		var blog_image string
 		var blog_created string
 
-		err = rows.Scan(&id, &blog_title, &blog_content, &blog_description, &blog_views, &blog_created)
-		checkErr(err)
+		err = rows.Scan(&id, &blog_title, &blog_content, &blog_description, &blog_views, &blog_image, &blog_created)
+		util.CheckErr(err)
 		temp := models.Blog{BlogId: id,
 			BlogTitle:       blog_title,
 			BlogContent:     blog_content,
 			BlogDescription: blog_description,
 			BlogViews:       blog_views,
+			BlogImage:       blog_image,
 			BlogCreatedAt:   blog_created}
 		blogs = append(blogs, temp)
 	}
@@ -50,23 +54,17 @@ func NewArticle(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&temp)
-	checkErr(err)
+	util.CheckErr(err)
 	defer r.Body.Close()
 
 	var lastInsertId int
 	sqlStmt := `INSERT INTO bmwadforth.articles (blog_title, blog_content, blog_description) VALUES ($1, $2, $3) RETURNING ID;`
 	err = db.QueryRow(sqlStmt, temp.BlogTitle, temp.BlogContent, temp.BlogDescription).Scan(&lastInsertId)
-	checkErr(err)
+	util.CheckErr(err)
 
 	res := models.HttpRepsonse{Status: 200, Error: false, Message: "Successfully created blog record", Data: lastInsertId}
 	data, _ := json.Marshal(res)
 
 	w.Header().Add("content-type", "application/json")
 	w.Write(data)
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }

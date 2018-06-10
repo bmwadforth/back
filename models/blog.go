@@ -6,5 +6,6 @@ type Blog struct {
 	BlogContent     string `json:"content"`
 	BlogDescription string `json:"description"`
 	BlogViews       string `json:"views"`
+	BlogImage       string `json:"image"`
 	BlogCreatedAt   string `json:"createdOn"`
 }

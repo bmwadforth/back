@@ -2,6 +2,7 @@ package common
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"log"
 )
 
 func GeneratePasswordHash(password []byte) string {
@@ -12,12 +13,12 @@ func GeneratePasswordHash(password []byte) string {
 	return string(hash)
 }
 
-func ComparePasswordHash(email string, plainPassword string) bool {
+func ComparePasswordHash(username string, plainPassword string) bool {
 	db := GetDB()
 
-	rows, err := db.Query(`SELECT password FROM xmanage.users WHERE email = $1`, email)
+	rows, err := db.Query(`SELECT password FROM bmwadforth.users WHERE username = $1`, username)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	defer rows.Close()
