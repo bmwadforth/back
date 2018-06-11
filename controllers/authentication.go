@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"fmt"
-	"time"
 )
 
 func NewUser(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +30,7 @@ func NewUser(w http.ResponseWriter, r *http.Request) {
 
 	res := models.HttpRepsonse{Status: 200, Error: false, Message: "Successfully created user", Data: lastInsertId}
 	data, _ := json.Marshal(res)
-
+	db.Close();
 	w.Header().Add("content-type", "application/json")
 	w.Write(data)
 }
@@ -51,10 +50,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	plainPassword := temp.Password
 	w.Header().Add("content-type", "application/json")
 	if common.ComparePasswordHash(email, plainPassword) {
-		timeCookie := time.Now()
-		timeCookie.Add(5000)
-		cookie := http.Cookie{"testCookie", "testValue", "/", "localhost", timeCookie, "", 1, true, false, "", nil}
-		http.SetCookie(w, &cookie)
+		util.AddCookie(w, "bmwadforth", "test", "bmwadforth.com")
 		json.NewEncoder(w).Encode(models.HttpRepsonse{200, false, "Successfully set the cookie", ""})
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)

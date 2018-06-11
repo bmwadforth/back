@@ -41,6 +41,27 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, _ := json.Marshal(blogs)
+	db.Close();
+	w.Header().Add("content-type", "application/json")
+	w.Write(data)
+}
+
+func GetArticle(w http.ResponseWriter, r *http.Request) {
+	db := common.DBConnect()
+	w.Header().Add("access-control-allow-origin", "http://localhost:3000")
+	fmt.Println("# Querying bmwadforth.articles")
+
+	whichId := r.FormValue("id")
+
+	sqlStmt := `SELECT * FROM bmwadforth.articles WHERE id = $1`
+	row := db.QueryRow(sqlStmt, whichId)
+
+	blog  := models.Blog {}
+
+	row.Scan(&blog.BlogId, &blog.BlogTitle, &blog.BlogContent, &blog.BlogDescription, &blog.BlogViews, &blog.BlogImage, &blog.BlogCreatedAt)
+
+	data, _ := json.Marshal(blog)
+	db.Close();
 	w.Header().Add("content-type", "application/json")
 	w.Write(data)
 }
@@ -64,6 +85,7 @@ func NewArticle(w http.ResponseWriter, r *http.Request) {
 
 	res := models.HttpRepsonse{Status: 200, Error: false, Message: "Successfully created blog record", Data: lastInsertId}
 	data, _ := json.Marshal(res)
+	db.Close();
 
 	w.Header().Add("content-type", "application/json")
 	w.Write(data)
