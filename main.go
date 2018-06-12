@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"math/rand"
 )
 
 func defineRoutes() *mux.Router {
@@ -25,6 +26,16 @@ func defineRoutes() *mux.Router {
 	r.HandleFunc("/api/articles/add", controllers.NewArticle).Methods("POST")
 
 	return r
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
 
 func main() {
@@ -55,9 +66,20 @@ func main() {
 			break
 		}
 		log.Println("SERVER UP AND RUNNING")
+		secretChan := make(chan []byte)
+
+		for range time.NewTicker(1 * time.Second).C {
+			secret := RandStringRunes(12)
+			go common.GenerateSecret(secret, secretChan)
+			chanReceiver := <- secretChan
+
+			fmt.Println(string(chanReceiver))
+		}
 	}()
+
 
 	portListen := fmt.Sprintf(":%d", enums.WEB_Port)
 
 	log.Fatal(http.ListenAndServe(portListen, r))
+
 }
