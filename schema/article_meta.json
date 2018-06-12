@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "title": "Article Metadata",
+  "description": "A metadata JSON object that records the metadata associated with a user when they view an article - platform/os/user-agent, etc.",
+  "type": "object",
+  "properties": {
+    "browser": {
+      "type": "string"
+    },
+    "os": {
+      "type": "string"
+    },
+    "device": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string"
+    },
+    "jwt": {
+      "type": "string"
+    }
+  },
+  "required": ["browser", "os", "device", "platform", "jwt"]
+}
+
+
+//dummy object
+/*
+
+{
+	"browser": "test",
+    "os": "windows 10",
+    "device": "Lenovo Test",
+    "platform": "WindowsX10442",
+	"jwt": "test"
+}
+
+*/
