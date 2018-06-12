@@ -44,3 +44,12 @@ create unique index users_id_uindex
 	on users (id)
 ;
 
+
+CREATE TABLE bmwadforth.article_meta
+(
+    id serial PRIMARY KEY NOT NULL,
+    article_id int,
+    meta JSON NOT NULL,
+    CONSTRAINT article_meta_articles_id_fk FOREIGN KEY (article_id) REFERENCES bmwadforth.articles (id)
+);
+CREATE UNIQUE INDEX article_meta_id_uindex ON bmwadforth.article_meta (id);
