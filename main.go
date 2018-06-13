@@ -60,13 +60,20 @@ func CheckServerUp() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	var msgBeenSent bool
 	for resp.StatusCode != http.StatusOK {
+		if !msgBeenSent {
+			println("Unable to start server\n")
+		}
+		msgBeenSent = true
 		println("Status code:", resp.StatusCode, "restarting server...")
+		time.Sleep(3 * time.Second)
 	}
+	println("\nSERVER STARTED SUCCESSFULLY\n")
 }
 
 func GenerateNewSecret(secretChan chan []byte) {
-	for range time.NewTicker(10 * time.Second).C {
+	for range time.NewTicker(15 * time.Second).C {
 		secret := RandStringRunes(12)
 		go common.GenerateSecret(secret, secretChan)
 		secretReceive := <-secretChan
@@ -81,7 +88,7 @@ func main() {
 
 	r := defineRoutes()
 
-	log.Println("Starting webserver")
+	log.Println("Starting webserver...\n")
 
 	secretChan := make(chan []byte)
 
