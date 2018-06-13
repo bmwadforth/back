@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"time"
 
-	"bmwadforth/util"
 	"math/rand"
 
 	"github.com/gorilla/mux"
@@ -58,9 +57,11 @@ func RandStringRunes(n int) string {
 
 func CheckServerUp() {
 	resp, err := http.Get("http://localhost:8000")
-	util.CheckErr(err)
-	if resp.StatusCode == http.StatusOK {
-		return
+	if err != nil {
+		log.Fatal(err)
+	}
+	for resp.StatusCode != http.StatusOK {
+		println("Status code:", resp.StatusCode, "restarting server...")
 	}
 }
 
