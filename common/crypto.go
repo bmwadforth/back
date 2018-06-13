@@ -1,11 +1,11 @@
 package common
 
 import (
-	"golang.org/x/crypto/bcrypt"
-	"log"
 	"crypto/sha512"
 	"encoding/json"
-	"bmwadforth/models"
+	"log"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GeneratePasswordHash(password []byte) string {
@@ -46,9 +46,8 @@ func GenerateSecret(secretSetter string, secretChan chan []byte) {
 	hash := sha512.New()
 	hash.Write([]byte(secretSetter))
 	secret := hash.Sum(nil)
-	data, _ := json.Marshal(models.HttpRepsonse{200, false, "Secret Generated", secret})
+	data, _ := json.Marshal(secret)
 	secretChan <- data
-	return
 }
 
 func checkErr(err error) {

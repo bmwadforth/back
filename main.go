@@ -9,8 +9,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
+	"bmwadforth/util"
 	"math/rand"
+
+	"github.com/gorilla/mux"
 )
 
 func defineRoutes() *mux.Router {
@@ -25,17 +27,51 @@ func defineRoutes() *mux.Router {
 	r.HandleFunc("/api/article", controllers.GetArticle).Methods("GET")
 	r.HandleFunc("/api/articles/add", controllers.NewArticle).Methods("POST")
 
+	r.HandleFunc("/api/secret/validate", ValidateSecret).Methods("POST")
+
 	return r
 }
 
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var Secret string
+
+func ValidateSecret(w http.ResponseWriter, r *http.Request) {
+	secretAttemp := r.FormValue("secret")
+
+	fmt.Println(Secret)
+	if secretAttemp == Secret {
+		w.Write([]byte("YES!"))
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("NO :("))
+	}
+
+}
 
 func RandStringRunes(n int) string {
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	b := make([]rune, n)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
+}
+
+func CheckServerUp() {
+	resp, err := http.Get("http://localhost:8000")
+	util.CheckErr(err)
+	if resp.StatusCode == http.StatusOK {
+		return
+	}
+}
+
+func GenerateNewSecret(secretChan chan []byte) {
+	for range time.NewTicker(10 * time.Second).C {
+		secret := RandStringRunes(12)
+		go common.GenerateSecret(secret, secretChan)
+		secretReceive := <-secretChan
+		fmt.Println(string(secretReceive))
+		Secret = string(secretReceive)
+	}
 }
 
 func main() {
@@ -46,37 +82,11 @@ func main() {
 
 	log.Println("Starting webserver")
 
-	go func() {
-		for {
-			time.Sleep(time.Second)
+	secretChan := make(chan []byte)
 
-			log.Println("Checking if started...")
-			resp, err := http.Get("http://localhost:8000")
-			if err != nil {
-				log.Println("Failed:", err)
-				continue
-			}
-			resp.Body.Close()
-			if resp.StatusCode != http.StatusOK {
-				log.Println("Not OK:", resp.StatusCode)
-				continue
-			}
+	go CheckServerUp()
 
-			// Reached this point: server is up and running!
-			break
-		}
-		log.Println("SERVER UP AND RUNNING")
-		secretChan := make(chan []byte)
-
-		for range time.NewTicker(1 * time.Second).C {
-			secret := RandStringRunes(12)
-			go common.GenerateSecret(secret, secretChan)
-			chanReceiver := <- secretChan
-
-			fmt.Println(string(chanReceiver))
-		}
-	}()
-
+	go GenerateNewSecret(secretChan)
 
 	portListen := fmt.Sprintf(":%d", enums.WEB_Port)
 
