@@ -24,7 +24,7 @@ func defineRoutes() *mux.Router {
 	r.HandleFunc("/api/login", controllers.UserLogin).Methods("POST")
 	r.HandleFunc("/api/articles/all", controllers.GetArticles).Methods("GET")
 	r.HandleFunc("/api/article", controllers.GetArticle).Methods("GET")
-	r.HandleFunc("/api/articles/add", controllers.NewArticle).Methods("POST")
+	r.HandleFunc("/api/article/add", controllers.NewArticle).Methods("POST")
 
 	r.HandleFunc("/api/secret/validate", ValidateSecret).Methods("POST")
 
@@ -32,6 +32,7 @@ func defineRoutes() *mux.Router {
 }
 
 var Secret string
+
 
 func ValidateSecret(w http.ResponseWriter, r *http.Request) {
 	secretAttemp := r.FormValue("secret")
@@ -78,7 +79,8 @@ func GenerateNewSecret(secretChan chan []byte) {
 		go common.GenerateSecret(secret, secretChan)
 		secretReceive := <-secretChan
 		fmt.Println(string(secretReceive))
-		Secret = string(secretReceive)
+		Secret = string(secretReceive[1: len(secretReceive) - 1])
+		controllers.Secret = Secret
 	}
 }
 

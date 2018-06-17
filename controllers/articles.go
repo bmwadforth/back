@@ -9,6 +9,8 @@ import (
 	"bmwadforth/util"
 )
 
+var Secret string
+
 func GetArticles(w http.ResponseWriter, r *http.Request) {
 	db := common.DBConnect()
 	w.Header().Add("access-control-allow-origin", "http://localhost:3000")
@@ -41,7 +43,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, _ := json.Marshal(blogs)
-	db.Close();
+	db.Close()
 	w.Header().Add("content-type", "application/json")
 	w.Write(data)
 }
@@ -78,15 +80,18 @@ func NewArticle(w http.ResponseWriter, r *http.Request) {
 	util.CheckErr(err)
 	defer r.Body.Close()
 
-	var lastInsertId int
-	sqlStmt := `INSERT INTO bmwadforth.articles (blog_title, blog_content, blog_description) VALUES ($1, $2, $3) RETURNING ID;`
-	err = db.QueryRow(sqlStmt, temp.BlogTitle, temp.BlogContent, temp.BlogDescription).Scan(&lastInsertId)
-	util.CheckErr(err)
-
-	res := models.HttpRepsonse{Status: 200, Error: false, Message: "Successfully created blog record", Data: lastInsertId}
-	data, _ := json.Marshal(res)
-	db.Close();
-
-	w.Header().Add("content-type", "application/json")
-	w.Write(data)
+	if(temp.BlogSecret == Secret){
+		var lastInsertId int
+		sqlStmt := `INSERT INTO bmwadforth.articles (blog_title, blog_content, blog_description) VALUES ($1, $2, $3) RETURNING ID;`
+		err = db.QueryRow(sqlStmt, temp.BlogTitle, temp.BlogContent, temp.BlogDescription).Scan(&lastInsertId)
+		util.CheckErr(err)
+		res := models.HttpRepsonse{Status: 200, Error: false, Message: "Successfully created blog record", Data: lastInsertId}
+		data, _ := json.Marshal(res)
+		db.Close()
+		w.Header().Add("content-type", "application/json")
+		w.Write(data)
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Failed to authorize"))
+	}
 }
