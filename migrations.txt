@@ -1,17 +1,17 @@
 create schema bmwadforth
 ;
 
-create sequence articles_id_seq
+create sequence bmwadforth.articles_id_seq
 	as integer
 	maxvalue 2147483647
 ;
 
-create sequence users_id_seq
+create sequence bmwadforth.users_id_seq
 	as integer
 	maxvalue 2147483647
 ;
 
-create table articles
+create table bmwadforth.articles
 (
 	id serial not null
 		constraint articles_pkey
@@ -26,10 +26,10 @@ create table articles
 ;
 
 create unique index articles_id_uindex
-	on articles (id)
+	on bmwadforth.articles (id)
 ;
 
-create table users
+create table bmwadforth.users
 (
 	id serial not null
 		constraint users_pkey
@@ -41,7 +41,7 @@ create table users
 ;
 
 create unique index users_id_uindex
-	on users (id)
+	on bmwadforth.users (id)
 ;
 
 
