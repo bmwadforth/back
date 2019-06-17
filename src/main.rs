@@ -9,6 +9,7 @@ extern crate uuid;
 mod controllers;
 mod data;
 mod models;
+mod fairings;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -16,5 +17,5 @@ fn index() -> &'static str {
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![index, controllers::articles::fetch_articles]).launch();
+    rocket::ignite().attach(fairings::cors::Cors).mount("/", routes![index, controllers::articles::fetch_articles]).launch();
 }
