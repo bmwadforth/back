@@ -1,0 +1,22 @@
+create table articles
+(
+	id serial not null,
+	name varchar(255) not null,
+	content uuid not null,
+	tags TEXT[],
+	created timestamp default now() not null
+);
+
+create unique index articles_content_uindex
+	on articles (content);
+
+create unique index articles_id_uindex
+	on articles (id);
+
+create unique index articles_name_uindex
+	on articles (name);
+
+alter table articles
+	add constraint articles_pk
+		primary key (id);
+

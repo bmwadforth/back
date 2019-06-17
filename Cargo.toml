@@ -1,0 +1,31 @@
+[package]
+name = "bmwadforth"
+version = "0.1.0"
+authors = ["Brannon Wadforth <whiskey@digitalnode.io>"]
+edition = "2018"
+
+[dependencies]
+rocket = "0.4.1"
+serde_json = "1.0"
+time = "0.1.42"
+
+[dependencies.chrono]
+version = "0.4"
+features = ["serde"]
+
+[dependencies.uuid]
+version = "0.5"
+features = ["serde"]
+
+[dependencies.postgres]
+version = "0.15"
+features = ["with-chrono", "with-uuid"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.rocket_contrib]
+version = "0.4.1"
+default-features = false
+features = ["json"]
