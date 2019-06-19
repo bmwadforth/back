@@ -18,3 +18,25 @@ pub fn get_articles() -> Vec<Article>{
 
     articles
 }
+
+pub fn get_article(name: String) -> Option<Article> {
+    let conn = Connection::connect("postgres://postgres:password@localhost:5432/bmwadforth", TlsMode::None).unwrap();
+    let name = str::replace(&name, "-", " ");
+    let rows = &conn.query("SELECT * FROM articles WHERE name ILIKE $1;", &[&name]).unwrap();
+
+    if rows.len() > 1 {
+        return None;
+    } else if rows.len() == 0 {
+        return None;
+    } else {
+        let row = rows.get(0);
+        let article = Article {
+            id: row.get(0),
+            name: row.get(1),
+            content: row.get(2),
+            tags: row.get(3),
+            created: row.get(4)
+        };
+        return Some(article)
+    }
+}

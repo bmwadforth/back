@@ -11,11 +11,6 @@ mod data;
 mod models;
 mod fairings;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
 fn main() {
-    rocket::ignite().attach(fairings::cors::Cors).mount("/", routes![index, controllers::articles::fetch_articles]).launch();
+    rocket::ignite().attach(fairings::cors::Cors).mount("/", routes![controllers::articles::fetch_articles, controllers::articles::fetch_article]).launch();
 }
