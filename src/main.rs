@@ -10,6 +10,7 @@ mod controllers;
 mod data;
 mod models;
 mod fairings;
+mod service;
 
 fn main() {
     rocket::ignite().attach(fairings::cors::Cors).mount("/", routes![controllers::articles::fetch_articles, controllers::articles::fetch_article]).launch();

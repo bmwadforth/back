@@ -11,9 +11,10 @@ pub fn get_articles() -> Vec<Article>{
         let article = Article {
             id: row.get(0),
             name: row.get(1),
-            content: row.get(2),
+            content_key: row.get(2),
             tags: row.get(3),
-            created: row.get(4)
+            created: row.get(4),
+            content: None
         };
         articles.push(article);
     }
@@ -36,9 +37,10 @@ pub fn get_article(name: String) -> Option<Article> {
         let article = Article {
             id: row.get(0),
             name: row.get(1),
-            content: row.get(2),
+            content_key: row.get(2),
             tags: row.get(3),
-            created: row.get(4)
+            created: row.get(4),
+            content: None
         };
         return Some(article)
     }
