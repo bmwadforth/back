@@ -6,14 +6,21 @@ use std::io::Read;
 
 pub fn get_article_content(key: String) -> ArticleContent {
     let client = S3Client::new(Region::ApSoutheast2);
-    let object_request = GetObjectRequest::default();
+    let object_request = GetObjectRequest {
+        bucket: String::from("bmwadforth"),
+        key,
+        ..Default::default()
+    };
     let future = client.get_object(object_request);
     let result = future.sync().unwrap();
 
     let body = result.body.unwrap();
     let content_length = result.content_length.unwrap();
-    let mut buff = Vec::with_capacity(content_length as usize);
-    let bytes_read = body.into_blocking_read().read_to_end(&mut buff);
+    let mut buff = String::new();
+    let bytes_read = body.into_blocking_read().read_to_string(&mut buff);
 
-    return ArticleContent{data: String::from("")};
+    println!("{}", buff);
+    println!("{}", content_length);
+
+    return ArticleContent{data: buff};
 }
