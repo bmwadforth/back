@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/gin-contrib/cors"
+  packages = ["."]
+  revision = "5f50d4fb4e0306dcacc6f8e9bea2dcee784dbbdf"
+  version = "v1.3.0"
+
+[[projects]]
   name = "github.com/gin-contrib/sse"
   packages = ["."]
   revision = "54d8467d122d380a14768b6b4e5cd7ca4755938f"
@@ -35,16 +41,6 @@
   packages = ["."]
   revision = "27518f6661eba504be5a7a9a9f6d9460d892ade3"
   version = "v1.1.7"
-
-[[projects]]
-  name = "github.com/lib/pq"
-  packages = [
-    ".",
-    "oid",
-    "scram"
-  ]
-  revision = "3427c32cb71afc948325f299f040e53c1dd78979"
-  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/mattn/go-isatty"
@@ -91,6 +87,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a635b047fcc179fa3451474e1f9e8016716c66722ce5b4ca5ab318f4db86ce07"
+  inputs-digest = "0c018d7669e3bb2b0a9fc68e4b4766ad2d3cb3c0875b14921cadf9bf87663cda"
   solver-name = "gps-cdcl"
   solver-version = 1
