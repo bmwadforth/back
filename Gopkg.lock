@@ -2,6 +2,50 @@
 
 
 [[projects]]
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/ini",
+    "internal/s3err",
+    "internal/sdkio",
+    "internal/sdkmath",
+    "internal/sdkrand",
+    "internal/sdkuri",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/eventstream",
+    "private/protocol/eventstream/eventstreamapi",
+    "private/protocol/json/jsonutil",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/restxml",
+    "private/protocol/xml/xmlutil",
+    "service/s3",
+    "service/sts",
+    "service/sts/stsiface"
+  ]
+  revision = "e51c7493711a6595b86496dc3f6229bae1354c1c"
+  version = "v1.23.19"
+
+[[projects]]
   name = "github.com/gin-contrib/cors"
   packages = ["."]
   revision = "5f50d4fb4e0306dcacc6f8e9bea2dcee784dbbdf"
@@ -35,6 +79,11 @@
   packages = ["."]
   revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
   version = "v1.1.1"
+
+[[projects]]
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
+  revision = "c2b33e84"
 
 [[projects]]
   name = "github.com/json-iterator/go"
@@ -87,6 +136,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0c018d7669e3bb2b0a9fc68e4b4766ad2d3cb3c0875b14921cadf9bf87663cda"
+  inputs-digest = "8b71025d7eb0fcf20ea7b43564e75279954d483616d6658312690bf221c3abfa"
   solver-name = "gps-cdcl"
   solver-version = 1
