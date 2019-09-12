@@ -13,7 +13,7 @@ func main() {
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://bmwadforth.com", "http://bmwadforth.com", "http://localhost:3000"},
-		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "PATCH"},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		AllowCredentials: true,
 		MaxAge: 24 * time.Hour,
