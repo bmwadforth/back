@@ -2,10 +2,11 @@ package main
 
 import (
 	"bmwadforth/controllers"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"log"
 	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -16,10 +17,11 @@ func main() {
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		AllowCredentials: true,
-		MaxAge: 24 * time.Hour,
+		MaxAge:           24 * time.Hour,
 	}))
 
-	r.GET("/ping",  controllers.Ping)
+	r.GET("/ping", controllers.Ping)
+
 	api := r.Group("/api")
 	api.GET("/articles", controllers.GetArticles)
 	api.GET("/article/:id", controllers.GetArticle)
