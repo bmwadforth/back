@@ -21,7 +21,6 @@ func main() {
 	}))
 
 	r.GET("/ping", controllers.Ping)
-
 	api := r.Group("/api")
 	api.GET("/articles", controllers.GetArticles)
 	api.GET("/article/:id", controllers.GetArticle)
