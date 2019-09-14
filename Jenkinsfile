@@ -5,6 +5,7 @@ pipeline {
     stages {
         stage('build') {
             agent {
+                label 'docker'
                 docker { image 'golang' }
             }
             steps {
