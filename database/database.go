@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"log"
 )
 
@@ -23,14 +24,14 @@ func LoadCredentials() Credentials {
 	return Credentials{
 		Username: "postgres",
 		Password: "password",
-		Database: "postgres",
+		Database: "bmwadforth",
 		Host:     "localhost",
 		Port:     5432,
 	}
 }
 
 func (c *Credentials) ConnectionString() string {
-	return fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=verify-full", c.Username, c.Password, c.Host, c.Database)
+	return fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", c.Username, c.Password, c.Host, c.Database)
 }
 
 func NewDatabaseConnection() *Instance {

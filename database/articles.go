@@ -4,15 +4,16 @@ import (
 	"bmwadforth/models"
 	"bmwadforth/util"
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 func GetArticles() ([]models.Article, error) {
-	articles := make([]models.Article, 5, 10)
+	articles := make([]models.Article, 0, 10)
 
 	db := NewDatabaseConnection()
 	defer db.Database.Close()
 
-	rows, err := db.Database.Query("SELECT * FROM ARTICLES")
+	rows, err := db.Database.Query("SELECT * FROM articles")
 	if err != nil {
 		util.DatabaseError(err)
 		return articles, err
@@ -20,7 +21,7 @@ func GetArticles() ([]models.Article, error) {
 
 	for rows.Next() {
 		article := models.Article{}
-		err := rows.Scan(&article.ID, &article.Title, &article.Description, &article.FileRef, &article.Tags, &article.Created)
+		err := rows.Scan(&article.ID, &article.Title, &article.Description, &article.FileRef, pq.Array(&article.Tags), &article.Created)
 		if err != nil {
 			util.DatabaseError(err)
 			return articles, err
@@ -44,7 +45,7 @@ func GetArticle(id string) (models.Article, error) {
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&article.ID, &article.Title, &article.Description, &article.FileRef, &article.Tags, &article.Created)
+		err := rows.Scan(&article.ID, &article.Title, &article.Description, &article.FileRef, pq.Array(&article.Tags), &article.Created)
 		if err != nil {
 			util.DatabaseError(err)
 			return article, err
@@ -71,7 +72,7 @@ func NewArticle(article models.NewArticle) (uuid.UUID, error) {
 	}
 	defer s.Close()
 
-	_, err = s.Exec(article.Title, article.Description, fileRef, article.Tags)
+	_, err = s.Exec(article.Title, article.Description, fileRef, pq.Array(article.Tags))
 	if err != nil {
 		_ = tx.Rollback()
 		util.DatabaseError(err)

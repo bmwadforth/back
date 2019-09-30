@@ -1,0 +1,26 @@
+//Articles
+create table ARTICLES
+(
+	id serial not null,
+	title varchar(255) not null,
+	description varchar,
+	file_reference uuid not null,
+	tags text[] default '{}',
+	created timestamp default now() not null
+);
+
+create unique index ARTICLES_file_reference_uindex
+	on ARTICLES (file_reference);
+
+create unique index ARTICLES_id_uindex
+	on ARTICLES (id);
+
+create unique index ARTICLES_title_uindex
+	on ARTICLES (title);
+
+alter table ARTICLES
+	add constraint ARTICLES_pk
+		primary key (id);
+
+
+

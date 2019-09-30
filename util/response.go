@@ -7,8 +7,8 @@ type ApiResponse struct {
 	Errors  []error     `json:"errors"`
 }
 
-func NewResponse(status int, message string) ApiResponse {
-	return ApiResponse{
+func NewResponse(status int, message string) *ApiResponse {
+	return &ApiResponse{
 		Status:  status,
 		Message: message,
 		Data:    nil,
