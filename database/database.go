@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"log"
+	"os"
 )
 
 type Credentials struct {
@@ -12,7 +13,7 @@ type Credentials struct {
 	Password string
 	Database string
 	Host     string
-	Port     uint32
+	Port     string
 }
 
 type Instance struct {
@@ -20,13 +21,12 @@ type Instance struct {
 }
 
 func LoadCredentials() Credentials {
-	//TODO: Get credentials from the process environment/arguments
 	return Credentials{
-		Username: "postgres",
-		Password: "password",
-		Database: "bmwadforth",
-		Host:     "localhost",
-		Port:     5432,
+		Username: os.Getenv("BMWADFORTH_USERNAME"),
+		Password: os.Getenv("BMWADFORTH_PASSWORD"),
+		Database: os.Getenv("BMWADFORTH_DATABASE"),
+		Host:     os.Getenv("BMWADFORTH_HOST"),
+		Port:     os.Getenv("BMWADFORTH_PORT"),
 	}
 }
 
