@@ -13,3 +13,12 @@ func NewArticle(id uuid.UUID, data *multipart.FileHeader) (bool, error){
 
 	return true, nil
 }
+
+func GetArticle(id uuid.UUID) ([]byte, error){
+	bytes, err := getFileFromS3(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes, nil
+}

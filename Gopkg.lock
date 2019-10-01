@@ -39,6 +39,8 @@
     "private/protocol/restxml",
     "private/protocol/xml/xmlutil",
     "service/s3",
+    "service/s3/s3iface",
+    "service/s3/s3manager",
     "service/sts",
     "service/sts/stsiface"
   ]
@@ -146,6 +148,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4aa6751ff87d9c30578813b563c6b8d4415be698fe093873df159e9fdce234f1"
+  inputs-digest = "f7351ab3134c0d633b7933f0e58d243366eb4a4fe2de8573b7be402d29d1abab"
   solver-name = "gps-cdcl"
   solver-version = 1

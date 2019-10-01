@@ -16,6 +16,7 @@ type Article struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	FileRef     uuid.UUID `json:"fileRef"`
+	FileContent	string    `json:"fileContent"`
 	Tags        []string  `json:"tags"`
 	Created     time.Time `json:"created"`
 }
