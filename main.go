@@ -25,6 +25,7 @@ func main() {
 	api.GET("/articles", controllers.GetArticles)
 	api.GET("/article/:id", controllers.GetArticle)
 	api.POST("/article", controllers.NewArticle)
+	api.POST("/login", controllers.LoginAdmin)
 
 	err := r.Run()
 	if err != nil {
