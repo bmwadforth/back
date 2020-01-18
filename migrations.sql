@@ -36,7 +36,7 @@ CREATE INDEX IDX_ARTICLES_DATA
     ON BLOG.ARTICLES USING gin (to_tsvector('english', DATA));
 
 
-CREATE VIEW BLOG.V_ARCHIVED_ARTICLES AS
+CREATE VIEW BLOG.V_ARTICLES AS
 SELECT A.identifier      article_id,
        A.title           article_title,
        A.description     article_description,
@@ -50,5 +50,4 @@ SELECT A.identifier      article_id,
        AUTHOR.username   author_username,
        AUTHOR.created    author_created
 FROM BLOG.ARTICLES AS A
-         JOIN BLOG.AUTHORS AS AUTHOR ON A.author = AUTHOR.identifier
-WHERE A.status = 'ARCHIVED'::BLOG.ARTICLE_STATUS;
+         JOIN BLOG.AUTHORS AS AUTHOR ON A.author = AUTHOR.identifier;
