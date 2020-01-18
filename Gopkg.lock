@@ -155,6 +155,17 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:9d5b5d543996dd584da1db1e0de1926f3e4c3a8dba0fa2f8db70f3ebee2342e0"
+  name = "golang.org/x/crypto"
+  packages = [
+    "bcrypt",
+    "blowfish",
+  ]
+  pruneopts = "UT"
+  revision = "530e935923ad688be97c15eeb8e5ee42ebf2b54a"
+
+[[projects]]
+  branch = "master"
   digest = "1:e13350b7207ecc34977340d53522e0335dd36ed86ca7c346a36d2e88eb0fadfc"
   name = "golang.org/x/sys"
   packages = ["unix"]
@@ -187,6 +198,7 @@
     "github.com/graphql-go/graphql",
     "github.com/graphql-go/handler",
     "github.com/lib/pq",
+    "golang.org/x/crypto/bcrypt",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

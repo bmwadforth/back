@@ -6,6 +6,7 @@ var MutationType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "mutation",
 		Fields: graphql.Fields{
+			"author": AuthorMutation,
 		},
 	})
 

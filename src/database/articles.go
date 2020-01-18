@@ -17,7 +17,7 @@ func GetArticles() ([]models.Article, error) {
 	}
 
 	for rows.Next() {
-		article := models.Article{Author: models.User{}, Meta: models.ArticleMeta{Likes: 0, Views: 0}}
+		article := models.Article{Author: models.Author{}, Meta: models.ArticleMeta{Likes: 0, Views: 0}}
 		err := rows.Scan(&article.ID, &article.Title, &article.Description, pq.Array(&article.Tags), &article.Author.ID, &article.Created, &article.Data, &article.Meta, &article.Author.Username, &article.Author.Created)
 		if err != nil {
 			return nil, err

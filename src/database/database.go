@@ -13,6 +13,7 @@ type Credentials struct {
 	Username string
 	Password string
 	Database string
+	Schema 	 string
 	Host     string
 	Port     string
 }
@@ -26,13 +27,14 @@ func LoadCredentials() Credentials {
 		Username: os.Getenv("BMWADFORTH_USERNAME"),
 		Password: os.Getenv("BMWADFORTH_PASSWORD"),
 		Database: os.Getenv("BMWADFORTH_DATABASE"),
+		Schema:   os.Getenv("BMWADFORTH_SCHEMA"),
 		Host:     os.Getenv("BMWADFORTH_HOST"),
 		Port:     os.Getenv("BMWADFORTH_PORT"),
 	}
 }
 
 func (c *Credentials) ConnectionString() string {
-	return fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", c.Username, c.Password, c.Host, c.Database)
+	return fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable&search_path=%s", c.Username, c.Password, c.Host, c.Database, c.Schema)
 }
 
 func OpenDatabase() *Instance {

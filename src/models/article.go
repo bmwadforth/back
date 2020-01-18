@@ -7,13 +7,22 @@ type ArticleMeta struct {
 	Likes int `json:"likes"`
 }
 
+type ArticleStatus string
+
+const (
+	DRAFT    ArticleStatus = "DRAFT"
+	ACTIVE   ArticleStatus = "ACTIVE"
+	ARCHIVED ArticleStatus = "ARCHIVED"
+)
+
 type Article struct {
-	ID          int         `json:"id"`
-	Title       string      `json:"title"`
-	Description string      `json:"description"`
-	Tags        []string    `json:"tags"`
-	Data        []byte      `json:"data"`
-	Meta        ArticleMeta `json:"meta"`
-	Author      User        `json:"author"`
-	Created     time.Time   `json:"created"`
+	ID          int           `json:"id"`
+	Title       string        `json:"title"`
+	Description string        `json:"description"`
+	Tags        []string      `json:"tags"`
+	Data        []byte        `json:"data"`
+	Status      ArticleStatus `json:"status"`
+	Meta        ArticleMeta   `json:"meta"`
+	Author      Author        `json:"author"`
+	Created     time.Time     `json:"created"`
 }
