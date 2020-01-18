@@ -30,7 +30,7 @@ func GetArticles() ([]models.Article, error) {
 	return articles, nil
 }
 
-func NewArticle(title string, description string, data []byte, author int) error {
+func NewArticle(title string, description string, data []byte, tags []string, author int) error {
 	instance := OpenDatabase()
 	db := instance.Database
 	defer db.Close()
@@ -41,7 +41,7 @@ func NewArticle(title string, description string, data []byte, author int) error
 		return errors.New("unable to create database transaction")
 	}
 
-	_, err = tx.Exec("INSERT INTO BLOG.ARTICLES(title, description, data, author) VALUES ($1, $2, $3, $4);", title, description, data, author)
+	_, err = tx.Exec("INSERT INTO BLOG.ARTICLES(title, description, data, tags, author) VALUES ($1, $2, $3, $4, $5);", title, description, data, pq.Array(tags), author)
 	if err != nil {
 		log.Println(err)
 
