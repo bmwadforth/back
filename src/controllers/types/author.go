@@ -15,10 +15,10 @@ var AuthorType = graphql.NewObject(
 			"password": &graphql.Field{
 				Type: graphql.String,
 			},
-			"first_name": &graphql.Field{
+			"firstName": &graphql.Field{
 				Type: graphql.String,
 			},
-			"last_name": &graphql.Field{
+			"lastName": &graphql.Field{
 				Type: graphql.String,
 			},
 			"created": &graphql.Field{
