@@ -8,7 +8,6 @@ import (
 func NewAuthor(firstName string, lastName string, username string, password string) error {
 	instance := OpenDatabase()
 	db := instance.Database
-	defer db.Close()
 
 	tx, err := db.Begin(); if err != nil {
 		log.Println(err)
@@ -27,7 +26,6 @@ func NewAuthor(firstName string, lastName string, username string, password stri
 		return errors.New("unable to execute database action")
 	}
 
-	// commit the transaction
 	err = tx.Commit(); if err != nil {
 		log.Println(err)
 		return errors.New("unable to commit database action")

@@ -7,6 +7,7 @@ var QueryType = graphql.NewObject(
 		Name: "query",
 		Fields: graphql.Fields{
 			"articles": ArticlesQuery,
+			"article": ArticleQuery,
 			"projects": ProjectsQuery,
 		},
 	})

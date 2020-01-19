@@ -37,15 +37,24 @@ func (c *Credentials) ConnectionString() string {
 	return fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable&search_path=%s", c.Username, c.Password, c.Host, c.Database, c.Schema)
 }
 
+var internalInstance *Instance
+
 func OpenDatabase() *Instance {
-	creds := LoadCredentials()
-	db, err := sql.Open("postgres", creds.ConnectionString())
-	i := Instance{
-		Database: db,
+	if internalInstance == nil {
+		creds := LoadCredentials()
+		db, err := sql.Open("postgres", creds.ConnectionString())
+		i := Instance{
+			Database: db,
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		internalInstance = &i
 	}
-	if err != nil {
+
+	err := internalInstance.Database.Ping(); if err != nil {
 		log.Fatal(err)
 	}
 
-	return &i
+	return internalInstance
 }

@@ -20,7 +20,7 @@ type Article struct {
 	Title       string        `json:"title"`
 	Description string        `json:"description"`
 	Tags        []string      `json:"tags"`
-	Data        []byte        `json:"data"`
+	Data        string        `json:"data"`
 	Status      ArticleStatus `json:"status"`
 	Meta        ArticleMeta   `json:"meta"`
 	Author      Author        `json:"author"`

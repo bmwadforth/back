@@ -9,11 +9,6 @@ import (
 
 var ArticlesQuery = &graphql.Field{
 	Type: graphql.NewList(types.ArticleType),
-	Args: graphql.FieldConfigArgument{
-		"id": &graphql.ArgumentConfig{
-			Type: graphql.Int,
-		},
-	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		articles, err := database.GetArticles()
 		if err != nil {
@@ -27,9 +22,16 @@ var ArticlesQuery = &graphql.Field{
 var ArticleQuery = &graphql.Field{
 	Type: types.ArticleType,
 	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Type: graphql.Int,
+		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-		//Get Article
-		return nil, nil
+		id, _ := p.Args["id"].(int)
+		article, err := database.GetArticle(id)
+		if err != nil {
+			return nil, err
+		}
+		return article, nil
 	},
 }

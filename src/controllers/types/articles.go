@@ -18,6 +18,9 @@ var ArticleType = graphql.NewObject(
 			"tags": &graphql.Field{
 				Type: graphql.NewList(graphql.String),
 			},
+			"data": &graphql.Field{
+				Type: graphql.String,
+			},
 			"created": &graphql.Field{
 				Type: graphql.DateTime,
 			},

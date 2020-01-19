@@ -11,7 +11,6 @@ func GetArticles() ([]models.Article, error) {
 	articles := make([]models.Article, 0, 10)
 
 	db := OpenDatabase()
-	defer db.Database.Close()
 
 	rows, err := db.Database.Query("SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM BLOG.v_articles WHERE ARTICLE_STATUS = 'ACTIVE'::BLOG.ARTICLE_STATUS;")
 	if err != nil {
@@ -30,10 +29,32 @@ func GetArticles() ([]models.Article, error) {
 	return articles, nil
 }
 
+func GetArticle(id int) (models.Article, error) {
+	article := models.Article{Author: models.Author{}, Meta: models.ArticleMeta{Likes: 0, Views: 0}}
+	db := OpenDatabase()
+
+	rows, err := db.Database.Query("SELECT article_id, article_title, article_description, article_data, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM BLOG.v_articles WHERE ARTICLE_STATUS = 'ACTIVE'::BLOG.ARTICLE_STATUS AND article_id = $1;", id)
+	if err != nil {
+		return article, err
+	}
+
+	err = ViewArticle(id); if err != nil {
+		log.Println(err)
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&article.ID, &article.Title, &article.Description, &article.Data, pq.Array(&article.Tags), &article.Created, &article.Author.ID, &article.Author.FirstName, &article.Author.LastName, &article.Author.Created)
+		if err != nil {
+			return article, err
+		}
+	}
+
+	return article, nil
+}
+
 func NewArticle(title string, description string, data []byte, tags []string, author int) error {
 	instance := OpenDatabase()
 	db := instance.Database
-	defer db.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
@@ -54,7 +75,6 @@ func NewArticle(title string, description string, data []byte, tags []string, au
 		return errors.New("unable to execute database action")
 	}
 
-	// commit the transaction
 	err = tx.Commit()
 	if err != nil {
 		log.Println(err)
@@ -62,5 +82,36 @@ func NewArticle(title string, description string, data []byte, tags []string, au
 	}
 
 	return nil
+}
 
+func ViewArticle(id int) error {
+	instance := OpenDatabase()
+	db := instance.Database
+
+	tx, err := db.Begin()
+	if err != nil {
+		log.Println(err)
+		return errors.New("unable to create database transaction")
+	}
+
+	_, err = tx.Exec("UPDATE BLOG.ARTICLES SET meta = jsonb_set(meta, '{views}', (COALESCE(meta->>'views','0')::int + 1)::text::jsonb) WHERE identifier = $1;", id)
+	if err != nil {
+		log.Println(err)
+
+		err = tx.Rollback()
+		if err != nil {
+			log.Println(err)
+			return errors.New("unable to rollback database action")
+		}
+
+		return errors.New("unable to execute database action")
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		log.Println(err)
+		return errors.New("unable to commit database action")
+	}
+
+	return nil
 }

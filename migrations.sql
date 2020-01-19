@@ -23,7 +23,7 @@ CREATE TABLE BLOG.ARTICLES
     DESCRIPTION varchar(255)                             not null,
     DATA        text                                     not null,
     TAGS        text[]                                   not null default array []::text[],
-    META        jsonb                                    not null default '{}'::jsonb,
+    META        jsonb                                    not null default '{"views": 0, "likes": 0}'::jsonb,
     STATUS      BLOG.ARTICLE_STATUS                      not null default 'DRAFT'::BLOG.ARTICLE_STATUS,
     AUTHOR      int references BLOG.AUTHORS (IDENTIFIER) not null,
     CREATED     timestamptz                              not null default current_timestamp
