@@ -8,6 +8,7 @@ import (
 )
 
 var ArticlesQuery = &graphql.Field{
+	Name: "Articles",
 	Type: graphql.NewList(types.ArticleType),
 	Args: graphql.FieldConfigArgument{
 		"keywords": &graphql.ArgumentConfig{
@@ -41,6 +42,7 @@ var ArticlesQuery = &graphql.Field{
 }
 
 var ArticleQuery = &graphql.Field{
+	Name: "Article",
 	Type: types.ArticleType,
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
