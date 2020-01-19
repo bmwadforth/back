@@ -36,6 +36,7 @@ func GetArticle(id int) (models.Article, error) {
 
 	rows, err := db.Database.Query("SELECT article_id, article_title, article_description, article_data, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM BLOG.v_articles WHERE ARTICLE_STATUS = 'ACTIVE'::BLOG.ARTICLE_STATUS AND article_id = $1;", id)
 	if err != nil {
+		log.Println(err)
 		return article, err
 	}
 
@@ -47,6 +48,7 @@ func GetArticle(id int) (models.Article, error) {
 	for rows.Next() {
 		err := rows.Scan(&article.ID, &article.Title, &article.Description, &article.Data, pq.Array(&article.Tags), &article.Created, &article.Author.ID, &article.Author.FirstName, &article.Author.LastName, &article.Author.Created)
 		if err != nil {
+			log.Println(err)
 			return article, err
 		}
 	}

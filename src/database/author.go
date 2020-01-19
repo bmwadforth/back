@@ -2,8 +2,30 @@ package database
 
 import (
 	"errors"
+	"github.com/bmwadforth/back/src/models"
 	"log"
 )
+
+func GetAuthor(username string) (models.Author, error) {
+	author := models.Author{}
+	db := OpenDatabase()
+
+	rows, err := db.Database.Query("SELECT * FROM BLOG.AUTHORS WHERE username = $1;", username)
+	if err != nil {
+		log.Println(err)
+		return author, errors.New("unable to get author")
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&author.ID, &author.FirstName, &author.LastName, &author.Username, &author.Password, &author.Created)
+		if err != nil {
+			log.Println(err)
+			return author, errors.New("unable to load author")
+		}
+	}
+
+	return author, nil
+}
 
 func NewAuthor(firstName string, lastName string, username string, password string) error {
 	instance := OpenDatabase()

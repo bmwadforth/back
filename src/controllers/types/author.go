@@ -24,6 +24,9 @@ var AuthorType = graphql.NewObject(
 			"created": &graphql.Field{
 				Type: graphql.DateTime,
 			},
+			"token": &graphql.Field{
+				Type: graphql.String,
+			},
 		},
 	},
 )
