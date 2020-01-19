@@ -5,6 +5,7 @@ import (
 	"github.com/bmwadforth/back/src/models"
 	"github.com/lib/pq"
 	"log"
+	"strings"
 )
 
 func GetArticles() ([]models.Article, error) {
@@ -38,7 +39,8 @@ func GetArticle(id int) (models.Article, error) {
 		return article, err
 	}
 
-	err = ViewArticle(id); if err != nil {
+	err = ViewArticle(id)
+	if err != nil {
 		log.Println(err)
 	}
 
@@ -50,6 +52,31 @@ func GetArticle(id int) (models.Article, error) {
 	}
 
 	return article, nil
+}
+
+func SearchArticles(keywords []string) ([]models.Article, error) {
+	articles := make([]models.Article, 0, 10)
+
+	joinedKeyword := strings.Join(keywords, " | ")
+
+	db := OpenDatabase()
+	rows, err := db.Database.Query("WITH articles AS ( SELECT * FROM BLOG.V_ARTICLES ) SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM ( SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created, (to_tsvector('english', (convert_from(decode(article_data, 'base64'), 'UTF8') || ' ' || article_title || ' ' || article_description || ' ' || array_to_string(article_tags, ' '))) @@ to_tsquery('english', $1)) as match FROM articles) as a WHERE match = true;", joinedKeyword)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+		article := models.Article{Author: models.Author{}, Meta: models.ArticleMeta{Likes: 0, Views: 0}}
+		err := rows.Scan(&article.ID, &article.Title, &article.Description, pq.Array(&article.Tags), &article.Created, &article.Author.ID, &article.Author.FirstName, &article.Author.LastName, &article.Author.Created)
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+
+	return articles, nil
 }
 
 func NewArticle(title string, description string, data []byte, tags []string, author int) error {

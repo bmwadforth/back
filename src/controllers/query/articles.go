@@ -9,13 +9,34 @@ import (
 
 var ArticlesQuery = &graphql.Field{
 	Type: graphql.NewList(types.ArticleType),
+	Args: graphql.FieldConfigArgument{
+		"keywords": &graphql.ArgumentConfig{
+			Type: graphql.NewList(graphql.String),
+		},
+	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-		articles, err := database.GetArticles()
-		if err != nil {
-			return nil, errors.New("error fetching articles from database")
-		}
+		keywords, _ := p.Args["keywords"].([]interface{})
 
-		return articles, nil
+		if keywords != nil {
+			var cleanedKeywords []string
+			for _, e := range keywords {
+				cleanedKeywords = append(cleanedKeywords, e.(string))
+			}
+
+			articles, err := database.SearchArticles(cleanedKeywords)
+			if err != nil {
+				return nil, errors.New("error searching articles")
+			}
+
+			return articles, nil
+		} else {
+			articles, err := database.GetArticles()
+			if err != nil {
+				return nil, errors.New("error fetching articles")
+			}
+
+			return articles, nil
+		}
 	},
 }
 
