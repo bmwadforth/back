@@ -26,6 +26,13 @@ var ArticleMutation = &graphql.Field{
 	},
 	Type: types.AuthorType,
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		//TODO: Sort out authorization
+		/*
+		token := p.Context.Value("token").(string)
+		_, err := service.ValidateToken(token); if err != nil {
+			return nil, errors.New("unauthorized")
+		}*/
+
 		title, _ := p.Args["title"].(string)
 		description, _ := p.Args["description"].(string)
 		data, _ := p.Args["data"].(string)

@@ -6,6 +6,7 @@ import (
 	"github.com/bmwadforth/back/src/models"
 	"github.com/bmwadforth/jwt"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -48,4 +49,14 @@ func ValidateToken(tokenString string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func TokenFromHeader(headerValue string) (string, error) {
+	if headerValue == "" {
+		//No token present
+		return "", errors.New("no token present in request")
+	}
+
+	splitToken := strings.Split(headerValue, "Bearer")
+	return strings.TrimSpace(splitToken[1]), nil
 }

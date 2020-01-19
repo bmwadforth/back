@@ -25,6 +25,14 @@ func Handler() gin.HandlerFunc {
 	})
 
 	return func(c *gin.Context) {
+		/*
+		token, err := service.TokenFromHeader(c.Request.Header.Get("Authorization")); if err != nil {
+			log.Println(err)
+		}
+
+		ctx := context.WithValue(context.Background(), "token", token)
+
+		h.ContextHandler(ctx, c.Writer, c.Request)*/
 		h.ServeHTTP(c.Writer, c.Request)
 	}
 }

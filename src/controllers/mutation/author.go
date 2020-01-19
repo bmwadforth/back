@@ -32,7 +32,8 @@ var AuthorMutation = &graphql.Field{
 
 		hashedPassword := service.HashPassword([]byte(password))
 
-		err := database.NewAuthor(firstName, lastName, username, hashedPassword); if err != nil {
+		err := database.NewAuthor(firstName, lastName, username, hashedPassword)
+		if err != nil {
 			return nil, err
 		}
 
@@ -51,10 +52,18 @@ var LoginAuthorMutation = &graphql.Field{
 	},
 	Type: types.AuthorType,
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		//TODO: Sort out authorization
+		/*
+			token := p.Context.Value("token").(string)
+			_, err := service.ValidateToken(token); if err != nil {
+				return nil, errors.New("unauthorized")
+			}*/
+
 		username, _ := p.Args["username"].(string)
 		password, _ := p.Args["password"].(string)
 
-		author, err := database.GetAuthor(username); if err != nil {
+		author, err := database.GetAuthor(username)
+		if err != nil {
 			return nil, err
 		}
 
@@ -63,10 +72,11 @@ var LoginAuthorMutation = &graphql.Field{
 			return nil, errors.New("authentication challenge failed")
 		}
 
-		token, err := service.NewToken(author); if err != nil {
+		tokenString, err := service.NewToken(author)
+		if err != nil {
 			return nil, errors.New("unable to generate authentication token")
 		}
 
-		return map[string]string{"token": string(token)}, nil
+		return map[string]string{"token": string(tokenString)}, nil
 	},
 }
