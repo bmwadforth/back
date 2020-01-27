@@ -13,7 +13,7 @@ func GetArticles() ([]models.Article, error) {
 
 	db := OpenDatabase()
 
-	rows, err := db.Database.Query("SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM BLOG.v_articles WHERE ARTICLE_STATUS = 'ACTIVE'::BLOG.ARTICLE_STATUS;")
+	rows, err := db.Database.Query("SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM BLOG.v_articles WHERE ARTICLE_STATUS = 'ACTIVE'::BLOG.ARTICLE_STATUS ORDER BY article_created DESC;")
 	if err != nil {
 		return nil, err
 	}

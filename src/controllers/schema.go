@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/bmwadforth/back/src/controllers/mutation"
 	"github.com/bmwadforth/back/src/controllers/query"
-	"github.com/bmwadforth/back/src/controllers/subscription"
 	"github.com/gin-gonic/gin"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
@@ -13,7 +12,7 @@ var Schema, _ = graphql.NewSchema(
 	graphql.SchemaConfig{
 		Query:        query.QueryType,
 		Mutation:     mutation.MutationType,
-		Subscription: subscription.SubscriptionType,
+		//Subscription: subscription.SubscriptionType,
 	},
 )
 
