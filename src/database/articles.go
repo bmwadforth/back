@@ -62,7 +62,7 @@ func SearchArticles(keywords []string) ([]models.Article, error) {
 	joinedKeyword := strings.Join(keywords, " | ")
 
 	db := OpenDatabase()
-	rows, err := db.Database.Query("WITH articles AS (SELECT * FROM BLOG.V_ARTICLES) SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM (SELECT article_id, article_title, article_description, article_tags, article_created, article_status, author_id, author_first_name, author_last_name, author_created, (to_tsvector('english', (convert_from(decode(article_data, 'base64'), 'UTF8') || ' ' || article_title || ' ' || article_description || ' ' || array_to_string(article_tags, ' '))) @@ to_tsquery('english', $1)) as match FROM articles) as a WHERE match = true AND article_status = 'ACTIVE'::BLOG.ARTICLE_STATUS;", joinedKeyword)
+	rows, err := db.Database.Query("WITH articles AS (SELECT * FROM BLOG.V_ARTICLES) SELECT article_id, article_title, article_description, article_tags, article_created, author_id, author_first_name, author_last_name, author_created FROM (SELECT article_id, article_title, article_description, article_tags, article_created, article_status, author_id, author_first_name, author_last_name, author_created, (to_tsvector('english', (convert_from(decode(article_data, 'base64'), 'UTF8') || ' ' || article_title || ' ' || article_description || ' ' || array_to_string(article_tags, ' '))) @@ to_tsquery('english', quote_literal($1))) as match FROM articles) as a WHERE match = true AND article_status = 'ACTIVE'::BLOG.ARTICLE_STATUS;", joinedKeyword)
 	if err != nil {
 		log.Println(err)
 		return nil, err
