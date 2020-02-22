@@ -7,5 +7,6 @@ type Project struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Tags        []string  `json:"tags"`
+	Github		string	  `json:"github"`
 	Created     time.Time `json:"created"`
 }

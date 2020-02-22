@@ -15,6 +15,12 @@ var ProjectType = graphql.NewObject(
 			"description": &graphql.Field{
 				Type: graphql.String,
 			},
+			"tags": &graphql.Field{
+				Type: graphql.NewList(graphql.String),
+			},
+			"github": &graphql.Field{
+				Type: graphql.String,
+			},
 			"created": &graphql.Field{
 				Type: graphql.DateTime,
 			},

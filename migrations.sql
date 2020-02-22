@@ -51,3 +51,14 @@ SELECT A.identifier      article_id,
        AUTHOR.created    author_created
 FROM BLOG.ARTICLES AS A
          JOIN BLOG.AUTHORS AS AUTHOR ON A.author = AUTHOR.identifier;
+
+
+CREATE TABLE BLOG.PROJECTS
+(
+    IDENTIFIER  serial primary key unique                not null,
+    TITLE       varchar(128)                             not null unique,
+    DESCRIPTION varchar(255)                             not null,
+    TAGS        text[]                                   not null default array []::text[],
+    GITHUB      varchar(128)                             not null unique,
+    CREATED     timestamptz                              not null default current_timestamp
+);
