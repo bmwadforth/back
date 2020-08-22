@@ -3,10 +3,13 @@ import cookieParser from 'cookie-parser';
 import logger from './src/util/logger';
 import buildResponse from './src/util/response';
 import articleRouter from './src/routes/articles.js';
+import commentsRouter from './src/routes/comment.js';
 import { connectDatabase } from './src/data';
 
-connectDatabase()
-  .then(() => {
+(async function () {
+  try {
+    await connectDatabase();
+
     const app = express();
 
     app.use(express.json());
@@ -24,6 +27,7 @@ connectDatabase()
     });
 
     app.use('/api/v1/articles', articleRouter);
+    app.use('/api/v1/comments', commentsRouter);
 
     // Error handler
     app.use(function (err, req, res, next) {
@@ -42,8 +46,7 @@ connectDatabase()
       console.log(`App listening on: ${PORT}`);
       console.log('Press Ctrl+C to quit.');
     });
-  })
-  .catch((err) => {
-    logger.error(`Database Failed To Connect: ${err}`);
-    process.exit(1);
-  });
+  } catch (error) {
+    logger.error(error);
+  }
+})();
