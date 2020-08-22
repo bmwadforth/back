@@ -29,4 +29,32 @@ router.put('/', authorize, async (req, res, next) => {
   }
 });
 
+router.put('/:articleID/like', async (req, res, next) => {
+  try {
+    const { articleID } = req.params;
+    await Article.increment('likes', {
+      where: {
+        id: articleID,
+      },
+    });
+    res.json(buildResponse('Article liked successfully', null));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/:articleID/unlike', async (req, res, next) => {
+  try {
+    const { articleID } = req.params;
+    await Article.decrement('likes', {
+      where: {
+        id: articleID,
+      },
+    });
+    res.json(buildResponse('Article unliked successfully', null));
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

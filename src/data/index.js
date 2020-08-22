@@ -42,6 +42,7 @@ Article.init(
     },
     likes: {
       type: DataTypes.BIGINT,
+      defaultValue: 0,
     },
   },
   {
