@@ -1,0 +1,14 @@
+version: "3"
+services:
+  bmwadforth_db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${BMWADFORTH_USERNAME}
+      - POSTGRES_PASSWORD=${BMWADFORTH_PASSWORD}
+      - POSTGRES_DB=${BMWADFORTH_DATABASE}
+    volumes:
+      - bmwadforth_db_data:/var/lib/postgresql/data
+volumes:
+  bmwadforth_db_data:
