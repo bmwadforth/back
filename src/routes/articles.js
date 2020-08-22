@@ -11,10 +11,14 @@ router.get('/', async (req, res, next) => {
 });
 
 router.put('/', authorize, async (req, res, next) => {
-  const { title, description } = req.body;
-  // TODO: Validate request body
-  await Article.create({ title, description });
-  res.json(buildResponse('Article created successfully', null));
+  try {
+    const { title, description, tags, image } = req.body;
+    // TODO: Validate request body
+    await Article.create({ title, description, tags, image });
+    res.json(buildResponse('Article created successfully', null));
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;

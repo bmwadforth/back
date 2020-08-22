@@ -9,10 +9,17 @@ Article.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    tags: {
+      type: DataTypes.ARRAY(DataTypes.STRING(128)),
+    },
+    image: {
+      type: DataTypes.STRING,
     },
   },
   {
