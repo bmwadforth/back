@@ -5,6 +5,7 @@ import buildResponse from './src/util/response';
 import articleRouter from './src/routes/articles.js';
 import commentsRouter from './src/routes/comment.js';
 import { connectDatabase } from './src/data';
+import cors from 'cors';
 
 (async function () {
   try {
@@ -15,6 +16,11 @@ import { connectDatabase } from './src/data';
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
+    app.use(
+      cors({
+        origin: 'http://localhost:3000',
+      })
+    );
 
     // Logging handler
     app.use((req, res, next) => {
