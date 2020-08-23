@@ -1,4 +1,4 @@
-export default function buildResponse(message, data, error = null) {
+export default function buildResponse(message, data = null, error = null) {
   return {
     message,
     data,

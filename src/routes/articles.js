@@ -5,12 +5,34 @@ import { authorize } from '../middleware/authorization';
 
 const router = express.Router();
 
+router.get('/:articleID', async (req, res, next) => {
+  const { articleID } = req.params;
+  if (!articleID) {
+    res.status(400).json(buildResponse('Article ID must be supplied in query'));
+    return;
+  }
+
+  try {
+    const article = await Article.findOne({
+      where: {
+        id: articleID,
+      },
+    });
+    res.json(buildResponse('Fetched article successfully', article));
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/', async (req, res, next) => {
   try {
     const articles = await Article.findAll({
       include: {
         model: Comment,
         as: 'comments',
+      },
+      attributes: {
+        exclude: ['content'],
       },
     });
     res.json(buildResponse('Fetched articles successfully', articles));
