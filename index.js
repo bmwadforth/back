@@ -18,7 +18,12 @@ import cors from 'cors';
     app.use(cookieParser());
     app.use(
       cors({
-        origin: 'http://localhost:3000',
+        origin: [
+          'http://localhost:3000',
+          'http://bmwadforth.com',
+          'https://bmwadforth.com',
+          'http://bmwadforth.com:8080',
+        ],
       })
     );
 
