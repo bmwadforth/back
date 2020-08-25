@@ -1,21 +1,25 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import logger from '../util/logger';
 
-//TODO: make username/password process.env
-const sequelize = new Sequelize('postgres', 'postgres', 'password', {
-  dialect: 'postgres',
-  host: 'localhost',
-  logging: false,
-  define: {
-    freezeTableName: true,
-    schema: 'public',
-  },
-  dialectOptions: {
-    options: {
-      requestTimeout: 3000,
+const sequelize = new Sequelize(
+  process.env.BMWADFORTH_DB_NAME || 'postgres',
+  process.env.BMWADFORTH_DB_USER || 'postgres',
+  process.env.BMWADFORTH_DB_PASSWORD || 'password',
+  {
+    dialect: 'postgres',
+    host: 'localhost',
+    logging: false,
+    define: {
+      freezeTableName: true,
+      schema: 'public',
     },
-  },
-});
+    dialectOptions: {
+      options: {
+        requestTimeout: 3000,
+      },
+    },
+  }
+);
 
 export class Article extends Model {}
 Article.init(

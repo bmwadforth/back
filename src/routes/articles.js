@@ -44,7 +44,7 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
-
+/*
 router.put('/', authorize, async (req, res, next) => {
   try {
     const { title, description, content, tags, image } = req.body;
@@ -81,6 +81,6 @@ router.put('/:articleID/unlike', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+});*/
 
 export default router;

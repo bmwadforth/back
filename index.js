@@ -33,7 +33,7 @@ import cors from 'cors';
     });
 
     app.use('/api/v1/articles', articleRouter);
-    app.use('/api/v1/comments', commentsRouter);
+    //app.use('/api/v1/comments', commentsRouter);
 
     // Error handler
     app.use(function (err, req, res, next) {
