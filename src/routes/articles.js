@@ -14,6 +14,10 @@ router.get('/:articleID', async (req, res, next) => {
 
   try {
     const article = await Article.findOne({
+      include: {
+        model: Comment,
+        as: 'comments',
+      },
       where: {
         id: articleID,
       },
