@@ -7,7 +7,7 @@ const sequelize = new Sequelize(
   process.env.BMWADFORTH_DB_PASSWORD || 'password',
   {
     dialect: 'postgres',
-    host: 'localhost',
+    host: process.env.BMWADFORTH_DB_HOST || 'postgres',
     logging: false,
     define: {
       freezeTableName: true,
