@@ -88,6 +88,7 @@ export function connectDatabase() {
       //logger.info('Database Synchronised');
       resolve(res);
     } catch (error) {
+      console.error(error);
       reject(error);
     }
   });
