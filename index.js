@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import logger from './src/util/logger';
 import buildResponse from './src/util/response';
 import articleRouter from './src/routes/articles.js';
+import projectsRouter from './src/routes/projects.js';
 import commentsRouter from './src/routes/comment.js';
 import { connectDatabase } from './src/data';
 import cors from 'cors';
@@ -38,6 +39,7 @@ import cors from 'cors';
     });
 
     app.use('/api/v1/articles', articleRouter);
+    app.use('/api/v1/projects', projectsRouter);
     //app.use('/api/v1/comments', commentsRouter);
 
     // Error handler

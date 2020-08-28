@@ -24,7 +24,6 @@ const sequelize = new Sequelize(
 export class Article extends Model {}
 Article.init(
   {
-    // Model attributes are defined here
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -59,7 +58,6 @@ Article.init(
 export class Comment extends Model {}
 Comment.init(
   {
-    // Model attributes are defined here
     ip: {
       type: DataTypes.INET,
       allowNull: false,
@@ -73,6 +71,34 @@ Comment.init(
     // Other model options go here
     sequelize,
     modelName: 'comments',
+  }
+);
+
+export class Project extends Model {}
+Project.init(
+  {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    read_me: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    repository: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    // Other model options go here
+    sequelize,
+    modelName: 'projects',
   }
 );
 
