@@ -3,8 +3,12 @@ using Autofac.Extensions.DependencyInjection;
 using Bmwadforth.Models;
 using Bmwadforth.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console());
 
 // Call UseServiceProviderFactory on the Host sub property 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -14,7 +18,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterType<BlogService>().As<IBlogService>();
 });
-
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database") ?? throw new Exception("Database connection string must not be null")));
