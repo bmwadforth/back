@@ -6,34 +6,46 @@ namespace Bmwadforth.Services;
 public class ArticleService : IArticleService
 {
     private readonly Context _context;
+    private readonly IBlobService _blobService;
     private readonly IConfiguration _configuration;
     
-    public ArticleService(Context context, IConfiguration configuration)
+    public ArticleService(Context context, IBlobService blobService, IConfiguration configuration)
     {
         _context = context;
+        _blobService = blobService;
         _configuration = configuration;
     }
-    
+
+    public Article GetArticle(int id)
+    {
+        return _context.Articles.FirstOrDefault(a => a.ArticleId == id);
+    }
+
     public IApiResponse<List<Article>> GetArticles()
     {
-        var articles = _context.Articles.Select(b => b).ToList();
+        var articles = _context.Articles.ToList();
         return new ApiResponse<List<Article>>("Articles fetched successfully", articles, null);
     }
 
     public (Stream, string) GetArticleContent(Guid id)
     {
-        var blobConfig = _configuration.GetSection("Blob");
-        var blobBucket = blobConfig.GetValue<string>("bucket");
-        var blobFolder = blobConfig.GetValue<string>("folder");
+        return _blobService.GetBlob(id).Result;
+    }
+    
+    public IApiResponse<Guid> NewArticleContent(int articleId, string contentType, Stream source)
+    {
+        var article = GetArticle(articleId);
+        var id = article.Content ?? Guid.NewGuid();
+        article.Content = id;
+        _blobService.NewBlob(id, contentType, source);
+        UpdateArticle(article);
+        return new ApiResponse<Guid>("New article content created", id, null);
+    }
 
-        var storage = StorageClient.Create();
-
-        var storageObject = storage.GetObject(blobBucket, $"{blobFolder}/{id}", new GetObjectOptions { Projection = Projection.Full });
-        var stream = new MemoryStream();
-        storage.DownloadObject(blobBucket, $"{blobFolder}/{id}", stream);
-        stream.Position = 0;
-        
-        return (stream, storageObject.ContentType);
+    public void UpdateArticle(Article article)
+    {
+        _context.Update(article);
+        _context.SaveChanges();
     }
 
     public async Task<IApiResponse<int>> NewArticle(Article article)

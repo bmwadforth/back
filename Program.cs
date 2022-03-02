@@ -16,6 +16,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 // Call ConfigureContainer on the Host sub property 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
+    containerBuilder.RegisterType<BlobService>().As<IBlobService>();
     containerBuilder.RegisterType<ArticleService>().As<IArticleService>();
 });
 

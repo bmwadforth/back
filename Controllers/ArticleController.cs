@@ -20,14 +20,18 @@ public class ArticleController : ControllerBase
 
     [HttpGet]
     public IApiResponse<List<Article>> Get() => _articleService.GetArticles();
-
-    [HttpGet("content")]
-    public IActionResult GetContent([FromQuery] Guid id)
-    {
-        var (content, contentType) = _articleService.GetArticleContent(id);
-        return File(content, contentType);
-    }
     
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromBody] Article article) => await _articleService.NewArticle(article);
+
+    [HttpGet("content")]
+    public IActionResult GetContent([FromQuery] int articleId)
+    {
+        var article = _articleService.GetArticle(articleId);
+        var (content, contentType) = _articleService.GetArticleContent(article.Content.Value);
+        return File(content, contentType);
+    }
+    
+    [HttpPut("content")]
+    public IApiResponse<Guid> CreateContent([FromQuery] int articleId) => _articleService.NewArticleContent(articleId, Request.ContentType ?? "application/octet-stream", Request.Body);
 }
