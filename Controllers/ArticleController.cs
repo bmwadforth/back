@@ -1,3 +1,4 @@
+using System.Net;
 using Bmwadforth.Models;
 using Bmwadforth.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,13 @@ public class ArticleController : ControllerBase
 
     [HttpGet]
     public IApiResponse<List<Article>> Get() => _articleService.GetArticles();
+
+    [HttpGet("content")]
+    public IActionResult GetContent([FromQuery] Guid id)
+    {
+        var (content, contentType) = _articleService.GetArticleContent(id);
+        return File(content, contentType);
+    }
     
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromBody] Article article) => await _articleService.NewArticle(article);
