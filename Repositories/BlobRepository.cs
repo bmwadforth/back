@@ -1,13 +1,14 @@
 using Bmwadforth.Types.Configuration;
+using Bmwadforth.Types.Interfaces;
 using Google.Cloud.Storage.V1;
 
 namespace Bmwadforth.Repositories;
 
-public class BlobService : IBlobService
+public class BlobRepository : IBlobRepository
 {
     private readonly BlobConfiguration _blobConfiguration;
     
-    public BlobService(IConfiguration configuration)
+    public BlobRepository(IConfiguration configuration)
     {
         _blobConfiguration = new BlobConfiguration();
         configuration.GetSection("Blob").Bind(_blobConfiguration);
@@ -25,10 +26,9 @@ public class BlobService : IBlobService
         return (stream, storageObject.ContentType);
     }
 
-    public void NewBlob(Guid id, string contentType, Stream source)
+    public async Task NewBlob(Guid id, string contentType, Stream source)
     {
-        var storage = StorageClient.Create();
-
-        storage.UploadObject(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", contentType, source);
+        var storage = await StorageClient.CreateAsync();
+        await storage.UploadObjectAsync(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", contentType, source);
     }
 }

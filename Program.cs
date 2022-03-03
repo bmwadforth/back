@@ -1,7 +1,10 @@
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Bmwadforth.Repositories;
+using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -16,9 +19,11 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 // Call ConfigureContainer on the Host sub property 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    containerBuilder.RegisterType<BlobService>().As<IBlobService>();
-    containerBuilder.RegisterType<ArticleService>().As<IArticleService>();
+    containerBuilder.RegisterType<BlobRepository>().As<IBlobRepository>();
+    containerBuilder.RegisterType<ArticleRepository>().As<IArticleRepository>();
 });
+
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database") ?? throw new Exception("Database connection string must not be null")));
