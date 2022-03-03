@@ -19,6 +19,9 @@ public class ArticleController : ApiController<ArticleController>
 
     [HttpGet]
     public async Task<IApiResponse<IEnumerable<Article>>> GetAll() => await _Mediator.Send(new GetArticlesRequest());
+    
+    [HttpGet("{articleId}")]
+    public async Task<IApiResponse<Article>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));
 
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromBody] Article request) => await _Mediator.Send(new CreateArticleRequest(request));
