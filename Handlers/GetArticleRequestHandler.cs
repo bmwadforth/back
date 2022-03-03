@@ -19,7 +19,6 @@ public class GetArticleRequestHandler : IRequestHandler<GetArticleRequest, IApiR
     public async Task<IApiResponse<Article>> Handle(GetArticleRequest request, CancellationToken cancellationToken)
     {
         var article = await _repository.GetArticle(request.ArticleId);
-        throw new Exception("Error");
         return new ApiResponse<Article>("success", article, null);
     }
 }
