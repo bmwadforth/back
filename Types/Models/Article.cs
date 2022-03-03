@@ -1,4 +1,4 @@
-namespace Bmwadforth.Models;
+namespace Bmwadforth.Types.Models;
 
 public class Article : BaseEntity
 {

@@ -1,6 +1,7 @@
-using Bmwadforth.Models;
+using Bmwadforth.Types.Interfaces;
+using Bmwadforth.Types.Models;
 
-namespace Bmwadforth.Services;
+namespace Bmwadforth.Repositories;
 
 public interface IArticleService
 {

@@ -1,6 +1,6 @@
-using System.Net;
-using Bmwadforth.Models;
-using Bmwadforth.Services;
+using Bmwadforth.Repositories;
+using Bmwadforth.Types.Interfaces;
+using Bmwadforth.Types.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bmwadforth.Controllers;

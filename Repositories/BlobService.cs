@@ -1,8 +1,7 @@
-using Bmwadforth.Models;
-using Bmwadforth.Models.Configuration;
+using Bmwadforth.Types.Configuration;
 using Google.Cloud.Storage.V1;
 
-namespace Bmwadforth.Services;
+namespace Bmwadforth.Repositories;
 
 public class BlobService : IBlobService
 {

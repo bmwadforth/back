@@ -1,4 +1,4 @@
-namespace Bmwadforth.Models.Configuration;
+namespace Bmwadforth.Types.Configuration;
 
 public class BlobConfiguration
 {

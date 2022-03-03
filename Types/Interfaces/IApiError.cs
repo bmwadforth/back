@@ -1,4 +1,4 @@
-namespace Bmwadforth.Models;
+namespace Bmwadforth.Types.Interfaces;
 
 public interface IApiError
 {

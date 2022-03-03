@@ -1,4 +1,6 @@
-namespace Bmwadforth.Models;
+using Bmwadforth.Types.Interfaces;
+
+namespace Bmwadforth.Types.Response;
 
 public class ApiResponse<T> : IApiResponse<T>
 {

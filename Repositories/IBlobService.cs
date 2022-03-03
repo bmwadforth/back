@@ -1,4 +1,4 @@
-namespace Bmwadforth.Services;
+namespace Bmwadforth.Repositories;
 
 public interface IBlobService
 {

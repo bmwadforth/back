@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Bmwadforth.Models;
+namespace Bmwadforth.Types.Models;
 
-public class Context : DbContext
+public class DatabaseContext : DbContext
 {
-    public Context(DbContextOptions<Context> options) : base(options) {}
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) {}
 
     public DbSet<Article> Articles { get; set; }
     

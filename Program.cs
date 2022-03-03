@@ -1,7 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Bmwadforth.Models;
-using Bmwadforth.Services;
+using Bmwadforth.Repositories;
+using Bmwadforth.Types.Models;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -20,7 +20,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<ArticleService>().As<IArticleService>();
 });
 
-builder.Services.AddDbContext<Context>(options =>
+builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database") ?? throw new Exception("Database connection string must not be null")));
 
 builder.Services.AddControllers();

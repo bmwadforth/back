@@ -1,29 +1,30 @@
-using Bmwadforth.Models;
-using Google.Cloud.Storage.V1;
+using Bmwadforth.Types.Interfaces;
+using Bmwadforth.Types.Models;
+using Bmwadforth.Types.Response;
 
-namespace Bmwadforth.Services;
+namespace Bmwadforth.Repositories;
 
 public class ArticleService : IArticleService
 {
-    private readonly Context _context;
+    private readonly DatabaseContext _databaseContext;
     private readonly IBlobService _blobService;
     private readonly IConfiguration _configuration;
     
-    public ArticleService(Context context, IBlobService blobService, IConfiguration configuration)
+    public ArticleService(DatabaseContext databaseContext, IBlobService blobService, IConfiguration configuration)
     {
-        _context = context;
+        _databaseContext = databaseContext;
         _blobService = blobService;
         _configuration = configuration;
     }
 
     public Article GetArticle(int id)
     {
-        return _context.Articles.FirstOrDefault(a => a.ArticleId == id);
+        return _databaseContext.Articles.FirstOrDefault(a => a.ArticleId == id);
     }
 
     public IApiResponse<List<Article>> GetArticles()
     {
-        var articles = _context.Articles.ToList();
+        var articles = _databaseContext.Articles.ToList();
         return new ApiResponse<List<Article>>("Articles fetched successfully", articles, null);
     }
 
@@ -44,14 +45,14 @@ public class ArticleService : IArticleService
 
     public void UpdateArticle(Article article)
     {
-        _context.Update(article);
-        _context.SaveChanges();
+        _databaseContext.Update(article);
+        _databaseContext.SaveChanges();
     }
 
     public async Task<IApiResponse<int>> NewArticle(Article article)
     {
-        _context.Articles.Add(article);
-        await _context.SaveChangesAsync();
+        _databaseContext.Articles.Add(article);
+        await _databaseContext.SaveChangesAsync();
 
         return new ApiResponse<int>("Article created successfully", article.ArticleId, null);
     }
