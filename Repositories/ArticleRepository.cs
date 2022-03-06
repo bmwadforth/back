@@ -1,5 +1,6 @@
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
+using Bmwadforth.Types.Request;
 using Bmwadforth.Types.Response;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,10 +59,18 @@ public class ArticleRepository : IArticleRepository
         await _databaseContext.SaveChangesAsync();
     }
 
-    public async Task<int> NewArticle(Article article)
+    public async Task<int> NewArticle(CreateArticleDto article)
     {
-        _databaseContext.Articles.Add(article);
+        var newArticle = new Article
+        {
+            Title = article.Title,
+            Description = article.Description,
+            Content = article.Content,
+            Thumbnail = article.Thumbnail
+        };
+
+        _databaseContext.Articles.Add(newArticle);
         await _databaseContext.SaveChangesAsync();
-        return article.ArticleId;
+        return newArticle.ArticleId;
     }
 }

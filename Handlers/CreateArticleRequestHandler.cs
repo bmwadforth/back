@@ -1,11 +1,12 @@
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
+using Bmwadforth.Types.Request;
 using Bmwadforth.Types.Response;
 using MediatR;
 
 namespace Bmwadforth.Handlers;
 
-public sealed record CreateArticleRequest(Article Article) : IRequest<IApiResponse<int>>;
+public sealed record CreateArticleRequest(CreateArticleDto Article) : IRequest<IApiResponse<int>>;
 
 public class CreateArticleRequestHandler : IRequestHandler<CreateArticleRequest, IApiResponse<int>>
 {

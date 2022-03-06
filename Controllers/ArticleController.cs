@@ -1,7 +1,10 @@
 using Bmwadforth.Handlers;
+using Bmwadforth.Middleware;
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
+using Bmwadforth.Types.Request;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bmwadforth.Controllers;
@@ -23,27 +26,30 @@ public class ArticleController : ApiController<ArticleController>
     [HttpGet("{articleId}")]
     public async Task<IApiResponse<Article>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));
 
+    [ApiKey]
     [HttpPost]
-    public async Task<IApiResponse<int>> Create([FromBody] Article request) => await _Mediator.Send(new CreateArticleRequest(request));
+    public async Task<IApiResponse<int>> Create([FromBody] CreateArticleDto request) => await _Mediator.Send(new CreateArticleRequest(request));
 
     
-    [HttpGet("content")]
-    public async Task<IActionResult> GetContent([FromQuery] int articleId)
+    [HttpGet("content/{articleId}")]
+    public async Task<IActionResult> GetContent([FromRoute] int articleId)
     {
         var response = await _Mediator.Send(new GetArticleContentRequest(articleId));
         return File(response.Item1, response.Item2);
     }
     
-    [HttpPost("content")]
-    public async Task<IApiResponse<int>> CreateContent([FromQuery] int articleId) => await _Mediator.Send(new CreateArticleContentRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
+    [ApiKey]
+    [HttpPost("content/{articleId}")]
+    public async Task<IApiResponse<int>> CreateContent([FromRoute] int articleId) => await _Mediator.Send(new CreateArticleContentRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
     
-    [HttpGet("thumbnail")]
-    public async Task<IActionResult> GetThumbnail([FromQuery] int articleId)
+    [HttpGet("thumbnail/{articleId}")]
+    public async Task<IActionResult> GetThumbnail([FromRoute] int articleId)
     {
         var (stream, contentType) = await _Mediator.Send(new GetArticleThumbnailRequest(articleId));
         return File(stream, contentType);
     }
     
-    [HttpPost("thumbnail")]
-    public async Task<IApiResponse<int>> CreateThumbnail([FromQuery] int articleId) => await _Mediator.Send(new CreateArticleThumbnailRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
+    [ApiKey]
+    [HttpPost("thumbnail/{articleId}")]
+    public async Task<IApiResponse<int>> CreateThumbnail([FromRoute] int articleId) => await _Mediator.Send(new CreateArticleThumbnailRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
 }
