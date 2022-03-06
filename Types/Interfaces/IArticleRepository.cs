@@ -7,8 +7,10 @@ public interface IArticleRepository
 {
     Task<Article> GetArticle(int id);
     Task<List<Article>> GetArticles();
-    Task<(Stream, string)> GetArticleContent(int id);
     Task<int> NewArticle(Article article);
-    Task NewArticleContent(int id, string contentType, Stream source);
     Task UpdateArticle(Article article);
+    Task<(Stream, string)> GetArticleContent(int id);
+    Task NewArticleContent(int id, string contentType, Stream source);
+    Task<(Stream, string)> GetArticleThumbnail(int id);
+    Task NewArticleThumbnail(int id, string contentType, Stream source);
 }

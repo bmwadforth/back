@@ -37,6 +37,21 @@ public class ArticleRepository : IArticleRepository
         await UpdateArticle(article);
     }
 
+    public async Task<(Stream, string)> GetArticleThumbnail(int id)
+    {
+        var article = await GetArticle(id);
+        return await _blobRepository.GetBlob(article.Thumbnail.Value);
+    }
+
+    public async Task NewArticleThumbnail(int articleId, string contentType, Stream source)
+    {
+        var article = await GetArticle(articleId);
+        var id = article.Thumbnail ?? Guid.NewGuid();
+        article.Thumbnail = id;
+        await _blobRepository.NewBlob(id, contentType, source);
+        await UpdateArticle(article);
+    }
+
     public async Task UpdateArticle(Article article)
     {
         _databaseContext.Update(article);

@@ -36,4 +36,14 @@ public class ArticleController : ApiController<ArticleController>
     
     [HttpPost("content")]
     public async Task<IApiResponse<int>> CreateContent([FromQuery] int articleId) => await _Mediator.Send(new CreateArticleContentRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
+    
+    [HttpGet("thumbnail")]
+    public async Task<IActionResult> GetThumbnail([FromQuery] int articleId)
+    {
+        var (stream, contentType) = await _Mediator.Send(new GetArticleThumbnailRequest(articleId));
+        return File(stream, contentType);
+    }
+    
+    [HttpPost("thumbnail")]
+    public async Task<IApiResponse<int>> CreateThumbnail([FromQuery] int articleId) => await _Mediator.Send(new CreateArticleThumbnailRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
 }
