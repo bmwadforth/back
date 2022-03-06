@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bmwadforth.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220303060117_InitialCreate")]
+    [Migration("20220306053505_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,7 @@ namespace Bmwadforth.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArticleId"));
 
-                    b.Property<Guid?>("Content")
+                    b.Property<Guid?>("ContentId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedDate")
@@ -44,7 +44,7 @@ namespace Bmwadforth.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("Thumbnail")
+                    b.Property<Guid?>("ThumbnailId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Title")
@@ -57,6 +57,9 @@ namespace Bmwadforth.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.HasKey("ArticleId");
+
+                    b.HasIndex("ArticleId", "Title")
+                        .IsUnique();
 
                     b.ToTable("Articles");
                 });

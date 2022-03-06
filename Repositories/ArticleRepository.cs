@@ -26,14 +26,14 @@ public class ArticleRepository : IArticleRepository
     public async Task<(Stream, string)> GetArticleContent(int id)
     {
         var article = await GetArticle(id);
-        return await _blobRepository.GetBlob(article.Content.Value);
+        return await _blobRepository.GetBlob(article.ContentId.Value);
     }
     
     public async Task NewArticleContent(int articleId, string contentType, Stream source)
     {
         var article = await GetArticle(articleId);
-        var id = article.Content ?? Guid.NewGuid();
-        article.Content = id;
+        var id = article.ContentId ?? Guid.NewGuid();
+        article.ContentId = id;
         await _blobRepository.NewBlob(id, contentType, source);
         await UpdateArticle(article);
     }
@@ -41,14 +41,14 @@ public class ArticleRepository : IArticleRepository
     public async Task<(Stream, string)> GetArticleThumbnail(int id)
     {
         var article = await GetArticle(id);
-        return await _blobRepository.GetBlob(article.Thumbnail.Value);
+        return await _blobRepository.GetBlob(article.ThumbnailId.Value);
     }
 
     public async Task NewArticleThumbnail(int articleId, string contentType, Stream source)
     {
         var article = await GetArticle(articleId);
-        var id = article.Thumbnail ?? Guid.NewGuid();
-        article.Thumbnail = id;
+        var id = article.ThumbnailId ?? Guid.NewGuid();
+        article.ThumbnailId = id;
         await _blobRepository.NewBlob(id, contentType, source);
         await UpdateArticle(article);
     }
@@ -65,8 +65,8 @@ public class ArticleRepository : IArticleRepository
         {
             Title = article.Title,
             Description = article.Description,
-            Content = article.Content,
-            Thumbnail = article.Thumbnail
+            ContentId = article.Content,
+            ThumbnailId = article.Thumbnail
         };
 
         _databaseContext.Articles.Add(newArticle);

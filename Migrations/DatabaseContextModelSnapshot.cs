@@ -30,7 +30,7 @@ namespace Bmwadforth.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArticleId"));
 
-                    b.Property<Guid?>("Content")
+                    b.Property<Guid?>("ContentId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedDate")
@@ -42,7 +42,7 @@ namespace Bmwadforth.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("Thumbnail")
+                    b.Property<Guid?>("ThumbnailId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Title")
@@ -55,6 +55,9 @@ namespace Bmwadforth.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.HasKey("ArticleId");
+
+                    b.HasIndex("ArticleId", "Title")
+                        .IsUnique();
 
                     b.ToTable("Articles");
                 });

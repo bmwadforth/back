@@ -12,6 +12,10 @@ public class DatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Article>()
+            .HasIndex(p => new { p.ArticleId, p.Title })
+            .IsUnique();
+        
+        modelBuilder.Entity<Article>()
             .Property(b => b.CreatedDate)
             .HasDefaultValueSql("NOW()");
         

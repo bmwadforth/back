@@ -18,8 +18,8 @@ namespace Bmwadforth.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Thumbnail = table.Column<Guid>(type: "uuid", nullable: true),
-                    Content = table.Column<Guid>(type: "uuid", nullable: true),
+                    ThumbnailId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ContentId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
@@ -27,6 +27,12 @@ namespace Bmwadforth.Migrations
                 {
                     table.PrimaryKey("PK_Articles", x => x.ArticleId);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_ArticleId_Title",
+                table: "Articles",
+                columns: new[] { "ArticleId", "Title" },
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
