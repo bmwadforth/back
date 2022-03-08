@@ -1,13 +1,14 @@
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
 using Bmwadforth.Types.Request;
+using Bmwadforth.Types.Response;
 
 namespace Bmwadforth.Types.Interfaces;
 
 public interface IArticleRepository
 {
     Task<Article> GetArticle(int id);
-    Task<List<Article>> GetArticles();
+    Task<List<ArticleDto>> GetArticles();
     Task<int> NewArticle(CreateArticleDto article);
     Task UpdateArticle(Article article);
     Task<(Stream, string)> GetArticleContent(int id);

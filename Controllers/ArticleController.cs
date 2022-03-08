@@ -3,6 +3,7 @@ using Bmwadforth.Middleware;
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
 using Bmwadforth.Types.Request;
+using Bmwadforth.Types.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public class ArticleController : ApiController<ArticleController>
     }
 
     [HttpGet]
-    public async Task<IApiResponse<IEnumerable<Article>>> GetAll() => await _Mediator.Send(new GetArticlesRequest());
+    public async Task<IApiResponse<IEnumerable<ArticleDto>>> GetAll() => await _Mediator.Send(new GetArticlesRequest());
     
     [HttpGet("{articleId}")]
     public async Task<IApiResponse<Article>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));

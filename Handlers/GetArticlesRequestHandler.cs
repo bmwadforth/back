@@ -5,9 +5,9 @@ using MediatR;
 
 namespace Bmwadforth.Handlers;
 
-public sealed record GetArticlesRequest() : IRequest<IApiResponse<IEnumerable<Article>>>;
+public sealed record GetArticlesRequest() : IRequest<IApiResponse<IEnumerable<ArticleDto>>>;
 
-public class GetArticlesRequestHandler : IRequestHandler<GetArticlesRequest, IApiResponse<IEnumerable<Article>>>
+public class GetArticlesRequestHandler : IRequestHandler<GetArticlesRequest, IApiResponse<IEnumerable<ArticleDto>>>
 {
     private readonly IArticleRepository _repository;
 
@@ -16,9 +16,9 @@ public class GetArticlesRequestHandler : IRequestHandler<GetArticlesRequest, IAp
         _repository = repository;
     }
 
-    public async Task<IApiResponse<IEnumerable<Article>>> Handle(GetArticlesRequest request, CancellationToken cancellationToken)
+    public async Task<IApiResponse<IEnumerable<ArticleDto>>> Handle(GetArticlesRequest request, CancellationToken cancellationToken)
     {
         var articles = await _repository.GetArticles();
-        return new ApiResponse<IEnumerable<Article>>("success", articles, null);
+        return new ApiResponse<IEnumerable<ArticleDto>>("success", articles, null);
     }
 }

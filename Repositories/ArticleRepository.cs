@@ -1,3 +1,5 @@
+using System.Buffers.Text;
+using System.Text;
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
 using Bmwadforth.Types.Request;
@@ -21,7 +23,28 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id) ?? null;
 
-    public async Task<List<Article>> GetArticles() => await _databaseContext.Articles.ToListAsync();
+    public async Task<List<ArticleDto>> GetArticles()
+    {
+        var articles = await _databaseContext.Articles.ToListAsync();
+        var articlesDto = new List<ArticleDto>();
+        foreach (var article in articles)
+        {
+            var (thumbnail, contentType) = await _blobRepository.GetBlob(article.ThumbnailId.Value);
+            articlesDto.Add(new ArticleDto
+            {
+                ArticleId = article.ArticleId,
+                Title = article.Title,
+                Description = article.Description,
+                ContentId = article.ContentId,
+                ThumbnailId = article.ThumbnailId,
+                ThumbnailDataUrl = $"data:{contentType};base64,{Convert.ToBase64String(((MemoryStream)thumbnail).ToArray())}",
+                CreatedDate = article.CreatedDate,
+                UpdatedDate = article.UpdatedDate
+            });
+        }
+
+        return articlesDto;
+    }
 
     public async Task<(Stream, string)> GetArticleContent(int id)
     {
