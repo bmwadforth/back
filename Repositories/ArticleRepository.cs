@@ -1,5 +1,6 @@
 using System.Buffers.Text;
 using System.Text;
+using Bmwadforth.Types.Configuration;
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
 using Bmwadforth.Types.Request;
@@ -12,13 +13,14 @@ public class ArticleRepository : IArticleRepository
 {
     private readonly DatabaseContext _databaseContext;
     private readonly IBlobRepository _blobRepository;
-    private readonly IConfiguration _configuration;
+    private readonly ConnectionStringConfiguration _configuration;
     
     public ArticleRepository(DatabaseContext databaseContext, IBlobRepository blobRepository, IConfiguration configuration)
     {
         _databaseContext = databaseContext;
         _blobRepository = blobRepository;
-        _configuration = configuration;
+        _configuration = new ConnectionStringConfiguration();
+        configuration.GetSection("ConnectionStrings").Bind(_configuration);
     }
 
     public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id) ?? null;
@@ -29,7 +31,6 @@ public class ArticleRepository : IArticleRepository
         var articlesDto = new List<ArticleDto>();
         foreach (var article in articles)
         {
-            var (thumbnail, contentType) = await _blobRepository.GetBlob(article.ThumbnailId.Value);
             articlesDto.Add(new ArticleDto
             {
                 ArticleId = article.ArticleId,
@@ -37,7 +38,7 @@ public class ArticleRepository : IArticleRepository
                 Description = article.Description,
                 ContentId = article.ContentId,
                 ThumbnailId = article.ThumbnailId,
-                ThumbnailDataUrl = $"data:{contentType};base64,{Convert.ToBase64String(((MemoryStream)thumbnail).ToArray())}",
+                ThumbnailDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
                 CreatedDate = article.CreatedDate,
                 UpdatedDate = article.UpdatedDate
             });
