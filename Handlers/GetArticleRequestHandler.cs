@@ -1,13 +1,13 @@
+using System.Net;
 using Bmwadforth.Types.Interfaces;
-using Bmwadforth.Types.Models;
 using Bmwadforth.Types.Response;
 using MediatR;
 
 namespace Bmwadforth.Handlers;
 
-public sealed record GetArticleRequest(int ArticleId) : IRequest<IApiResponse<Article>>;
+public sealed record GetArticleRequest(int ArticleId) : IRequest<IApiResponse<ArticleDto>>;
 
-public class GetArticleRequestHandler : IRequestHandler<GetArticleRequest, IApiResponse<Article>>
+public class GetArticleRequestHandler : IRequestHandler<GetArticleRequest, IApiResponse<ArticleDto>>
 {
     private readonly IArticleRepository _repository;
 
@@ -16,9 +16,9 @@ public class GetArticleRequestHandler : IRequestHandler<GetArticleRequest, IApiR
         _repository = repository;
     }
 
-    public async Task<IApiResponse<Article>> Handle(GetArticleRequest request, CancellationToken cancellationToken)
+    public async Task<IApiResponse<ArticleDto>> Handle(GetArticleRequest request, CancellationToken cancellationToken)
     {
-        var article = await _repository.GetArticle(request.ArticleId);
-        return new ApiResponse<Article>("success", article, null);
+        var article = await _repository.GetArticleById(request.ArticleId);
+        return article == null ? new ApiResponse<ArticleDto>("article not found", null!, null, HttpStatusCode.NotFound) : new ApiResponse<ArticleDto>("success", article, null);
     }
 }

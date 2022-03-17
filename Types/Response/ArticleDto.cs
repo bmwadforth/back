@@ -10,6 +10,7 @@ public class ArticleDto
     public Guid? ThumbnailId { get; set; }
     public string ThumbnailDataUrl { get; set; }
     public Guid? ContentId { get; set; }
+    public string ContentDataUrl { get; set; }
     public DateTimeOffset CreatedDate { get; set; }
     public DateTimeOffset UpdatedDate { get; set; }    
 }

@@ -8,6 +8,7 @@ namespace Bmwadforth.Types.Interfaces;
 public interface IArticleRepository
 {
     Task<Article> GetArticle(int id);
+    Task<ArticleDto?> GetArticleById(int id);
     Task<List<ArticleDto>> GetArticles();
     Task<int> NewArticle(CreateArticleDto article);
     Task UpdateArticle(Article article);

@@ -25,13 +25,17 @@ public class ExceptionFilter : IExceptionFilter
         }
         
         _logger.LogError($"Exeption has occurred: {context.Exception.Message}");
-
+        
         var errors = new List<IApiError>();
-        var response = new ApiResponse<object>(context.Exception.Message, null, errors);
+
+        ApiResponse<object> response = context.Exception switch
+        {
+            _ => new ApiResponse<object>(context.Exception.Message, null, errors, HttpStatusCode.InternalServerError)
+        };
 
         context.Result = new ObjectResult(response)
         {
-            StatusCode = (int) HttpStatusCode.InternalServerError
+            StatusCode = (int) response.StatusCode
         };
     }
 }

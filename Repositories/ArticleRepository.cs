@@ -24,6 +24,24 @@ public class ArticleRepository : IArticleRepository
     }
 
     public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id) ?? null;
+    public async Task<ArticleDto?> GetArticleById(int id)
+    {
+        var article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
+        if (article == null) return null;
+        
+        return new ArticleDto
+        {
+            ArticleId = article.ArticleId,
+            Title = article.Title,
+            Description = article.Description,
+            ContentId = article.ContentId,
+            ThumbnailId = article.ThumbnailId,
+            ThumbnailDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
+            ContentDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
+            CreatedDate = article.CreatedDate,
+            UpdatedDate = article.UpdatedDate
+        };
+    }
 
     public async Task<List<ArticleDto>> GetArticles()
     {
@@ -39,6 +57,7 @@ public class ArticleRepository : IArticleRepository
                 ContentId = article.ContentId,
                 ThumbnailId = article.ThumbnailId,
                 ThumbnailDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
+                ContentDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
                 CreatedDate = article.CreatedDate,
                 UpdatedDate = article.UpdatedDate
             });
