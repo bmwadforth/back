@@ -22,10 +22,10 @@ public class ArticleRepository : IArticleRepository
         configuration.GetSection("ConnectionStrings").Bind(_configuration);
     }
 
-    public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id) ?? throw new NotFoundException($"article with {id} not found");
+    public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id && a.Published) ?? throw new NotFoundException($"article with {id} not found");
     public async Task<ArticleDto?> GetArticleById(int id)
     {
-        var article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
+        var article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id && a.Published);
         if (article == null) throw new NotFoundException($"article with {id} not found");
         
         return new ArticleDto
@@ -46,15 +46,15 @@ public class ArticleRepository : IArticleRepository
     {
         var articles = await _databaseContext.Articles.ToListAsync();
 
-        return articles.Select(article => new ArticleDto
+        return articles.Where(a => a.Published).Select(article => new ArticleDto
             {
                 ArticleId = article.ArticleId,
                 Title = article.Title,
                 Description = article.Description,
                 ContentId = article.ContentId,
                 ThumbnailId = article.ThumbnailId,
-                ThumbnailDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
-                ContentDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
+                ThumbnailDataUrl = article.ThumbnailId == null ? null : $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
+                ContentDataUrl = article.ContentId == null ? null : $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
                 CreatedDate = article.CreatedDate,
                 UpdatedDate = article.UpdatedDate
             })
@@ -106,7 +106,8 @@ public class ArticleRepository : IArticleRepository
             Title = article.Title,
             Description = article.Description,
             ContentId = article.Content,
-            ThumbnailId = article.Thumbnail
+            ThumbnailId = article.Thumbnail,
+            Published = false
         };
 
         _databaseContext.Articles.Add(newArticle);

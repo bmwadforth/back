@@ -7,4 +7,6 @@ public class Article : BaseEntity
     public string Description { get; set; }
     public Guid? ThumbnailId { get; set; }
     public Guid? ContentId { get; set; }
+    
+    public bool Published { get; set; }
 }
