@@ -1,6 +1,8 @@
+using System.Net;
 using Bmwadforth.Types.Configuration;
 using Bmwadforth.Types.Exceptions;
 using Bmwadforth.Types.Interfaces;
+using Google;
 using Google.Cloud.Storage.V1;
 
 namespace Bmwadforth.Repositories;
@@ -19,13 +21,24 @@ public class BlobRepository : IBlobRepository
     {
         var storage = await StorageClient.CreateAsync();
 
-        var storageObject = await storage.GetObjectAsync(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", new GetObjectOptions { Projection = Projection.Full });
-        if (storageObject == null) throw new NotFoundException($"blob with ID {id} not found");
-        var stream = new MemoryStream();
-        await storage.DownloadObjectAsync(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", stream);
-        stream.Position = 0;
-        
-        return (stream, storageObject.ContentType);
+        try
+        {
+            var storageObject = await storage.GetObjectAsync(_blobConfiguration.Bucket,
+                $"{_blobConfiguration.Folder}/{id}", new GetObjectOptions { Projection = Projection.Full });
+            var stream = new MemoryStream();
+            await storage.DownloadObjectAsync(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", stream);
+            stream.Position = 0;
+            return (stream, storageObject.ContentType);
+        }
+        catch (GoogleApiException e)
+        {
+            if (e.HttpStatusCode == HttpStatusCode.NotFound)
+            {
+                throw new NotFoundException($"blob with ID {id} not found");   
+            }
+
+            throw;
+        }
     }
 
     public async Task NewBlob(Guid id, string contentType, Stream source)
