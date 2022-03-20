@@ -7,6 +7,7 @@ public class DatabaseContext : DbContext
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) {}
 
     public DbSet<Article> Articles { get; set; }
+    public DbSet<Project> Projects { get; set; }
     
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,6 +21,18 @@ public class DatabaseContext : DbContext
             .HasDefaultValueSql("NOW()");
         
         modelBuilder.Entity<Article>()
+            .Property(b => b.UpdatedDate)
+            .HasDefaultValueSql("NOW()");
+        
+        modelBuilder.Entity<Project>()
+            .HasIndex(p => new { p.ProjectId, p.Title })
+            .IsUnique();
+        
+        modelBuilder.Entity<Project>()
+            .Property(b => b.CreatedDate)
+            .HasDefaultValueSql("NOW()");
+        
+        modelBuilder.Entity<Project>()
             .Property(b => b.UpdatedDate)
             .HasDefaultValueSql("NOW()");
     }
