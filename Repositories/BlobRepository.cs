@@ -1,4 +1,5 @@
 using Bmwadforth.Types.Configuration;
+using Bmwadforth.Types.Exceptions;
 using Bmwadforth.Types.Interfaces;
 using Google.Cloud.Storage.V1;
 
@@ -19,6 +20,7 @@ public class BlobRepository : IBlobRepository
         var storage = await StorageClient.CreateAsync();
 
         var storageObject = await storage.GetObjectAsync(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", new GetObjectOptions { Projection = Projection.Full });
+        if (storageObject == null) throw new NotFoundException($"blob with ID {id} not found");
         var stream = new MemoryStream();
         await storage.DownloadObjectAsync(_blobConfiguration.Bucket, $"{_blobConfiguration.Folder}/{id}", stream);
         stream.Position = 0;

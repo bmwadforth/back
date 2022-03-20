@@ -20,16 +20,12 @@ public class ExceptionFilter : IExceptionFilter
 
     public void OnException(ExceptionContext context)
     {
-        if (_hostEnvironment.IsDevelopment())
-        {
-            //return;
-        }
-        
         _logger.LogError($"Exception has occurred: {context.Exception.Message}");
+        if (_hostEnvironment.IsDevelopment()) return;
 
         HttpStatusCode statusCode;
         var errors = new List<IApiError>();
-        ApiResponse<object> response = new ApiResponse<object>(context.Exception.Message, null, errors);
+        var response = new ApiResponse<object?>(context.Exception.Message, null, errors);
 
         switch (context.Exception)
         {

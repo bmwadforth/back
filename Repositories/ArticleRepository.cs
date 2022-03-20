@@ -22,7 +22,7 @@ public class ArticleRepository : IArticleRepository
         configuration.GetSection("ConnectionStrings").Bind(_configuration);
     }
 
-    public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id) ?? null;
+    public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id) ?? throw new NotFoundException($"article with {id} not found");
     public async Task<ArticleDto?> GetArticleById(int id)
     {
         var article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
@@ -45,10 +45,8 @@ public class ArticleRepository : IArticleRepository
     public async Task<List<ArticleDto>> GetArticles()
     {
         var articles = await _databaseContext.Articles.ToListAsync();
-        var articlesDto = new List<ArticleDto>();
-        foreach (var article in articles)
-        {
-            articlesDto.Add(new ArticleDto
+
+        return articles.Select(article => new ArticleDto
             {
                 ArticleId = article.ArticleId,
                 Title = article.Title,
@@ -59,15 +57,14 @@ public class ArticleRepository : IArticleRepository
                 ContentDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
                 CreatedDate = article.CreatedDate,
                 UpdatedDate = article.UpdatedDate
-            });
-        }
-
-        return articlesDto;
+            })
+            .ToList();
     }
 
     public async Task<(Stream, string)> GetArticleContent(int id)
     {
         var article = await GetArticle(id);
+        if (article.ContentId == null) throw new NotFoundException($"article with {id} does not have content");
         return await _blobRepository.GetBlob(article.ContentId.Value);
     }
     
@@ -83,6 +80,7 @@ public class ArticleRepository : IArticleRepository
     public async Task<(Stream, string)> GetArticleThumbnail(int id)
     {
         var article = await GetArticle(id);
+        if (article.ThumbnailId == null) throw new NotFoundException($"article with {id} does not have a thumbnail");
         return await _blobRepository.GetBlob(article.ThumbnailId.Value);
     }
 
