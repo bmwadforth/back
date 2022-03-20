@@ -1,4 +1,5 @@
 using System.Net;
+using Bmwadforth.Types.Exceptions;
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -21,21 +22,37 @@ public class ExceptionFilter : IExceptionFilter
     {
         if (_hostEnvironment.IsDevelopment())
         {
-            return;
+            //return;
         }
         
-        _logger.LogError($"Exeption has occurred: {context.Exception.Message}");
-        
-        var errors = new List<IApiError>();
+        _logger.LogError($"Exception has occurred: {context.Exception.Message}");
 
-        ApiResponse<object> response = context.Exception switch
+        HttpStatusCode statusCode;
+        var errors = new List<IApiError>();
+        ApiResponse<object> response = new ApiResponse<object>(context.Exception.Message, null, errors);
+
+        switch (context.Exception)
         {
-            _ => new ApiResponse<object>(context.Exception.Message, null, errors, HttpStatusCode.InternalServerError)
-        };
+            case ValidationException:
+            {
+                statusCode = HttpStatusCode.BadRequest;
+                break;
+            }
+            case NotFoundException:
+            {
+                statusCode = HttpStatusCode.NotFound;
+                break;
+            }
+            default:
+            {
+                statusCode = HttpStatusCode.InternalServerError;
+                break;
+            }
+        }
 
         context.Result = new ObjectResult(response)
         {
-            StatusCode = (int) response.StatusCode
+            StatusCode = (int) statusCode
         };
     }
 }

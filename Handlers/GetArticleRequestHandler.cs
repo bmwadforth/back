@@ -19,6 +19,6 @@ public class GetArticleRequestHandler : IRequestHandler<GetArticleRequest, IApiR
     public async Task<IApiResponse<ArticleDto>> Handle(GetArticleRequest request, CancellationToken cancellationToken)
     {
         var article = await _repository.GetArticleById(request.ArticleId);
-        return article == null ? new ApiResponse<ArticleDto>("article not found", null!, null, HttpStatusCode.NotFound) : new ApiResponse<ArticleDto>("success", article, null);
+        return article == null ? new ApiResponse<ArticleDto>("article not found", null!, null) : new ApiResponse<ArticleDto>("success", article, null);
     }
 }

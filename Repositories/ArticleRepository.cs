@@ -1,6 +1,5 @@
-using System.Buffers.Text;
-using System.Text;
 using Bmwadforth.Types.Configuration;
+using Bmwadforth.Types.Exceptions;
 using Bmwadforth.Types.Interfaces;
 using Bmwadforth.Types.Models;
 using Bmwadforth.Types.Request;
@@ -27,7 +26,7 @@ public class ArticleRepository : IArticleRepository
     public async Task<ArticleDto?> GetArticleById(int id)
     {
         var article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
-        if (article == null) return null;
+        if (article == null) throw new NotFoundException($"article with {id} not found");
         
         return new ArticleDto
         {

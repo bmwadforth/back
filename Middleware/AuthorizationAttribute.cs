@@ -29,10 +29,10 @@ public class ApiKeyAttribute : Attribute, IAsyncActionFilter
         if (!apiKey.Equals(extractedApiKey))
         {
             var errors = new List<IApiError>();
-            var response = new ApiResponse<object>("authentication failure", null, errors, HttpStatusCode.Unauthorized);
+            var response = new ApiResponse<object>("authentication failure", null, errors);
             context.Result = new ObjectResult(response)
             {
-                StatusCode = (int) response.StatusCode
+                StatusCode = (int) HttpStatusCode.Unauthorized
             };
             return;
         }

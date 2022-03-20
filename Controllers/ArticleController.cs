@@ -22,27 +22,14 @@ public class ArticleController : ApiController<ArticleController>
     }
 
     [HttpGet]
-    public async Task<IApiResponse<IEnumerable<ArticleDto>>> GetAll() {
-        var res = await _Mediator.Send(new GetArticlesRequest());
-        Response.StatusCode = (int) res.StatusCode;
-        return res;
-    }
+    public async Task<IApiResponse<IEnumerable<ArticleDto>>> GetAll() => await _Mediator.Send(new GetArticlesRequest());
     
     [HttpGet("{articleId}")]
-    public async Task<IApiResponse<ArticleDto>> Get([FromRoute] int articleId) {
-        var res = await _Mediator.Send(new GetArticleRequest(articleId));
-        Response.StatusCode = (int) res.StatusCode;
-        return res;
-    }
+    public async Task<IApiResponse<ArticleDto>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));
 
     [ApiKey]
     [HttpPost]
-    public async Task<IApiResponse<int>> Create([FromBody] CreateArticleDto request)
-    {
-        var res = await _Mediator.Send(new CreateArticleRequest(request));
-        Response.StatusCode = (int) res.StatusCode;
-        return res;
-    }
+    public async Task<IApiResponse<int>> Create([FromBody] CreateArticleDto request) => await _Mediator.Send(new CreateArticleRequest(request));
 
     
     [HttpGet("content/{articleId}")]
@@ -54,12 +41,7 @@ public class ArticleController : ApiController<ArticleController>
 
     [ApiKey]
     [HttpPost("content/{articleId}")]
-    public async Task<IApiResponse<int>> CreateContent([FromRoute] int articleId)
-    {
-        var res = await _Mediator.Send(new CreateArticleContentRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
-        Response.StatusCode = (int) res.StatusCode;
-        return res;
-    }
+    public async Task<IApiResponse<int>> CreateContent([FromRoute] int articleId) => await _Mediator.Send(new CreateArticleContentRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
     
     [HttpGet("thumbnail/{articleId}")]
     public async Task<IActionResult> GetThumbnail([FromRoute] int articleId)
@@ -70,10 +52,5 @@ public class ArticleController : ApiController<ArticleController>
 
     [ApiKey]
     [HttpPost("thumbnail/{articleId}")]
-    public async Task<IApiResponse<int>> CreateThumbnail([FromRoute] int articleId)
-    {
-        var res = await _Mediator.Send(new CreateArticleThumbnailRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
-        Response.StatusCode = (int)res.StatusCode;
-        return res;
-    }
+    public async Task<IApiResponse<int>> CreateThumbnail([FromRoute] int articleId) => await _Mediator.Send(new CreateArticleThumbnailRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
 }
