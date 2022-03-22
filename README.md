@@ -25,3 +25,13 @@ This project uses entity framework to manage the data layer.
 
 ### Adding Migrations
 Run the following command ```dotnet ef migrations add <migration_name>``` to add new migrations to the project
+
+## Building Container
+
+Docker is used to build the image. To build and push the image, run the following commands inside the project directory.
+
+```docker build --platform linux/amd64 -t bmwadforth-backend .```
+
+```docker tag bmwadforth-backend australia-southeast2-docker.pkg.dev/digital-node-1176/bmwadforth-docker/bmwadforth-backend```
+
+```docker push australia-southeast2-docker.pkg.dev/digital-node-1176/bmwadforth-docker/bmwadforth-backend```
