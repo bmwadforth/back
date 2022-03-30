@@ -1,12 +1,10 @@
 using System.Net;
 using Bmwadforth.Handlers;
-using Bmwadforth.Middleware;
-using Bmwadforth.Types.Interfaces;
-using Bmwadforth.Types.Models;
-using Bmwadforth.Types.Request;
-using Bmwadforth.Types.Response;
+using Bmwadforth.Common.Middleware;
+using Bmwadforth.Common.Interfaces;
+using Bmwadforth.Common.Request;
+using Bmwadforth.Common.Response;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bmwadforth.Controllers;

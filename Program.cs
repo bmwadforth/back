@@ -1,10 +1,10 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Bmwadforth.Middleware;
+using Bmwadforth.Common.Middleware;
 using Bmwadforth.Repositories;
-using Bmwadforth.Types.Interfaces;
-using Bmwadforth.Types.Models;
+using Bmwadforth.Common.Interfaces;
+using Bmwadforth.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -22,6 +22,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterType<BlobRepository>().As<IBlobRepository>();
     containerBuilder.RegisterType<ArticleRepository>().As<IArticleRepository>();
+    containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
 });
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());

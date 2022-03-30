@@ -1,9 +1,9 @@
-using Bmwadforth.Types.Configuration;
-using Bmwadforth.Types.Exceptions;
-using Bmwadforth.Types.Interfaces;
-using Bmwadforth.Types.Models;
-using Bmwadforth.Types.Request;
-using Bmwadforth.Types.Response;
+using Bmwadforth.Common.Configuration;
+using Bmwadforth.Common.Exceptions;
+using Bmwadforth.Common.Interfaces;
+using Bmwadforth.Common.Models;
+using Bmwadforth.Common.Request;
+using Bmwadforth.Common.Response;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bmwadforth.Repositories;

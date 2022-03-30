@@ -1,7 +1,7 @@
 using System.Net;
-using Bmwadforth.Types.Configuration;
-using Bmwadforth.Types.Exceptions;
-using Bmwadforth.Types.Interfaces;
+using Bmwadforth.Common.Configuration;
+using Bmwadforth.Common.Exceptions;
+using Bmwadforth.Common.Interfaces;
 using Google;
 using Google.Cloud.Storage.V1;
 
