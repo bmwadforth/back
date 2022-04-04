@@ -25,7 +25,7 @@ public class ExceptionFilter : IExceptionFilter
 
         HttpStatusCode statusCode;
         var errors = new List<IApiError>();
-        var response = new ApiResponse<object?>(context.Exception.Message, null, errors);
+        var response = new ApiResponse<object?>("An error has occurred", null, errors);
 
         switch (context.Exception)
         {

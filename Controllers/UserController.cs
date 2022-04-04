@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bmwadforth.Controllers;
 
+[ApiKey]
 [ApiController]
 [Route("/api/v1/user")]
 public class UserController : ApiController<UserController>
@@ -22,4 +23,7 @@ public class UserController : ApiController<UserController>
 
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromQuery] string username, [FromQuery] string password) => await _Mediator.Send(new CreateUserRequest(username, password));
+    
+    [HttpPost("login")]
+    public async Task<IApiResponse<string>> Login([FromQuery] string username, [FromQuery] string password) => await _Mediator.Send(new LoginUserRequest(username, password));
 }

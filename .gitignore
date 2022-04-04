@@ -36,3 +36,6 @@ msbuild.wrn
 .env
 .idea
 Logs
+
+appsettings.Development.json
+appsettings.Production.json

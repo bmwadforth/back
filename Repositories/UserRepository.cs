@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Bmwadforth.Common.Exceptions;
 using Bmwadforth.Common.Interfaces;
 using Bmwadforth.Common.Models;
@@ -8,10 +10,12 @@ namespace Bmwadforth.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly DatabaseContext _databaseContext;
+    private readonly IAuthenticationService _authenticationService;
     
-    public UserRepository(DatabaseContext databaseContext)
+    public UserRepository(DatabaseContext databaseContext, IAuthenticationService authenticationService)
     {
         _databaseContext = databaseContext;
+        _authenticationService = authenticationService;
     }
 
     public async Task<User> GetUserById(int id)
@@ -30,17 +34,24 @@ public class UserRepository : IUserRepository
         return user;
     }
     
-    public async Task<bool> LoginUser(string username, string password)
+    public async Task<string> LoginUser(string username, string password)
     {
         var user = await GetUserByUsername(username);
-        var passwordMatches = ValidateHash(password, user.Password);
+        var passwordMatches = _authenticationService.ValidateHash(password, user.Password);
 
         if (!passwordMatches)
         {
             throw new UserAuthenticationException("user is not authorized");
         }
 
-        return true;
+        var claims = new List<Claim>()
+        {
+            new("user", user.UserId.ToString())
+        };
+
+        var token = _authenticationService.GenerateToken(claims);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
     
     public async Task<int> CreateUser(string username, string password)
@@ -48,7 +59,7 @@ public class UserRepository : IUserRepository
         var newUser = new User
         {
             Username = username,
-            Password = HashPassword(password)
+            Password = _authenticationService.HashPassword(password)
         };
 
         _databaseContext.Users.Add(newUser);
@@ -56,8 +67,4 @@ public class UserRepository : IUserRepository
 
         return newUser.UserId;
     }
-
-    private string HashPassword(string password) => BCrypt.Net.BCrypt.HashPassword(password);
-    
-    private bool ValidateHash(string password, string hash) => BCrypt.Net.BCrypt.Verify(password, hash);
 }
