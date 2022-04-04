@@ -52,7 +52,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Events = new JwtBearerEvents
     {
-        OnAuthenticationFailed = context => throw new UserAuthenticationException(context.Exception.Message, context.Exception)
+        OnChallenge = ctx => throw new UserAuthenticationException(ctx.Error, ctx.AuthenticateFailure)
     };
 
     AuthenticationConfiguration authConfig = new AuthenticationConfiguration();
@@ -89,7 +89,6 @@ app.UseCors(configurePolicy =>
     configurePolicy.WithOrigins("http://localhost:3000");
 });
 
-//app.UseExceptionHandler(a => a.Run(async context => await ))
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
