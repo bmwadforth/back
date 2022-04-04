@@ -1,10 +1,7 @@
-using System.Net;
 using Bmwadforth.Handlers;
-using Bmwadforth.Middleware;
-using Bmwadforth.Types.Interfaces;
-using Bmwadforth.Types.Models;
-using Bmwadforth.Types.Request;
-using Bmwadforth.Types.Response;
+using Bmwadforth.Common.Interfaces;
+using Bmwadforth.Common.Request;
+using Bmwadforth.Common.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +25,7 @@ public class ArticleController : ApiController<ArticleController>
     [HttpGet("{articleId}")]
     public async Task<IApiResponse<ArticleDto>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));
 
-    [ApiKey]
+    [Authorize]
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromBody] CreateArticleDto request) => await _Mediator.Send(new CreateArticleRequest(request));
 
@@ -40,7 +37,7 @@ public class ArticleController : ApiController<ArticleController>
         return File(stream, contentType);
     }
 
-    [ApiKey]
+    [Authorize]
     [HttpPost("content/{articleId}")]
     public async Task<IApiResponse<int>> CreateContent([FromRoute] int articleId) => await _Mediator.Send(new CreateArticleContentRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
     
@@ -51,7 +48,7 @@ public class ArticleController : ApiController<ArticleController>
         return File(stream, contentType);
     }
 
-    [ApiKey]
+    [Authorize]
     [HttpPost("thumbnail/{articleId}")]
     public async Task<IApiResponse<int>> CreateThumbnail([FromRoute] int articleId) => await _Mediator.Send(new CreateArticleThumbnailRequest(articleId, Request.ContentType ?? "application/octet-stream", Request.Body));
 }
