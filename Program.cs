@@ -36,10 +36,7 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database") ?? throw new Exception("Database connection string must not be null")));
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add(typeof(ExceptionFilter));
-});
+builder.Services.AddControllers();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -76,6 +73,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
