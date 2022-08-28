@@ -22,11 +22,26 @@ public class ArticleRepository : IArticleRepository
         configuration.GetSection("ConnectionStrings").Bind(_configuration);
     }
 
-    public async Task<Article> GetArticle(int id) => await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id && a.Published) ?? throw new NotFoundException($"article with {id} not found");
+    public async Task<Article> GetArticle(int id, bool includeUnpublished = false)
+    {
+        Article? article;
+        if (includeUnpublished)
+        {
+            article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
+        }
+        else
+        {
+            article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id && a.Published);
+        }
+
+        if (article == null) throw new NotFoundException($"article with {id} not found");
+
+        return article;
+    }
+    
     public async Task<ArticleDto?> GetArticleById(int id)
     {
-        var article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id && a.Published);
-        if (article == null) throw new NotFoundException($"article with {id} not found");
+        var article = await GetArticle(id);
         
         return new ArticleDto
         {
@@ -70,7 +85,7 @@ public class ArticleRepository : IArticleRepository
     
     public async Task NewArticleContent(int articleId, string contentType, Stream source)
     {
-        var article = await GetArticle(articleId);
+        var article = await GetArticle(articleId, true);
         var id = article.ContentId ?? Guid.NewGuid();
         article.ContentId = id;
         await _blobRepository.NewBlob(id, contentType, source);
@@ -86,7 +101,7 @@ public class ArticleRepository : IArticleRepository
 
     public async Task NewArticleThumbnail(int articleId, string contentType, Stream source)
     {
-        var article = await GetArticle(articleId);
+        var article = await GetArticle(articleId, true);
         var id = article.ThumbnailId ?? Guid.NewGuid();
         article.ThumbnailId = id;
         await _blobRepository.NewBlob(id, contentType, source);
