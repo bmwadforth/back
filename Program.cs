@@ -49,7 +49,7 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.Events = new JwtBearerEvents
     {
-        OnChallenge = ctx => throw new UserAuthenticationException(ctx.Error, ctx.AuthenticateFailure)
+        OnChallenge = ctx => throw new UserAuthenticationException("Invalid authentication challenge", ctx.AuthenticateFailure)
     };
 
     AuthenticationConfiguration authConfig = new AuthenticationConfiguration();

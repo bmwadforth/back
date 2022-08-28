@@ -33,6 +33,7 @@ public class ExceptionMiddleware
         }
         catch (Exception e)
         {
+            response.Message = e.Message;
             _logger.LogError($"Exception has occurred: {e.Message}");
 
             if (_hostEnvironment.IsDevelopment()) throw;
