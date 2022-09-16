@@ -93,7 +93,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(configurePolicy =>
 {
-    configurePolicy.WithOrigins("http://localhost:3000");
+    configurePolicy.WithOrigins("https://localhost:44401");
 });
 
 app.UseHttpsRedirection();
