@@ -15,4 +15,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 EXPOSE 5001
-ENTRYPOINT ["dotnet", "Bmwadforth.dll"]
+ENTRYPOINT ["dotnet", "BlogWebsite.dll"]
