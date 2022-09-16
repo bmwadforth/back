@@ -15,6 +15,13 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: 'projects/416443939101/locations/global/workloadIdentityPools/bmwadforth-iam/providers/bmwadforth-iam-github'
+          service_account: 'bmwadforth-dev-ci@digital-node-1176.iam.gserviceaccount.com'    
+
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
