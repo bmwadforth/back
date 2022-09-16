@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿{
   "iisSettings": {
     "windowsAuthentication": false,
@@ -27,3 +28,36 @@
     }
   }
 }
+=======
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:3612",
+      "sslPort": 44363
+    }
+  },
+  "profiles": {
+    "Bmwadforth": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+>>>>>>> af54795714bf45f15e6bf21d2fe8b0b4d0528c7f
