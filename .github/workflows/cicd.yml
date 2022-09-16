@@ -5,12 +5,31 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
       - uses: 'actions/checkout@v3'
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: true
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: 'projects/416443939101/locations/global/workloadIdentityPools/bmwadforth-iam/providers/bmwadforth-iam-github'
+          service_account: 'bmwadforth-dev-ci@digital-node-1176.iam.gserviceaccount.com'    
+
+      - id: 'npm-auth'
+        name: 'Authenticate to GCP Artifact Registry'
+        run: npx google-artifactregistry-auth ./ClientApp/.npmrc          
 
       - name: Restore dependencies
         run: dotnet restore
@@ -38,6 +57,9 @@ jobs:
 
     steps:
       - uses: 'actions/checkout@v3'
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: true
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -49,6 +71,10 @@ jobs:
         with:
           workload_identity_provider: 'projects/416443939101/locations/global/workloadIdentityPools/bmwadforth-iam/providers/bmwadforth-iam-github'
           service_account: 'bmwadforth-dev-ci@digital-node-1176.iam.gserviceaccount.com'
+
+      - id: 'npm-auth'
+        name: 'Authenticate to GCP Artifact Registry'
+        run: npx google-artifactregistry-auth ./ClientApp/.npmrc                    
 
       - id: 'sdk'
         name: 'Setup Google Cloud SDK'
@@ -65,7 +91,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: australia-southeast2-docker.pkg.dev/digital-node-1176/bmwadforth-docker/bmwadforth-backend:latest
+          tags: australia-southeast2-docker.pkg.dev/digital-node-1176/bmwadforth-docker/bmwadforth-blogwebsite:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -80,6 +106,9 @@ jobs:
     steps:
       # actions/checkout MUST come before auth
       - uses: 'actions/checkout@v3'
+        with:
+          token: ${{ secrets.GH_PAT }}
+          submodules: true
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -92,9 +121,13 @@ jobs:
           workload_identity_provider: 'projects/416443939101/locations/global/workloadIdentityPools/bmwadforth-iam/providers/bmwadforth-iam-github'
           service_account: 'bmwadforth-dev-ci@digital-node-1176.iam.gserviceaccount.com'
 
+      - id: 'npm-auth'
+        name: 'Authenticate to GCP Artifact Registry'
+        run: npx google-artifactregistry-auth ./ClientApp/.npmrc                    
+
       - id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
           region: 'australia-southeast2'
-          service: 'bmwadforth-backend'
-          image: 'australia-southeast2-docker.pkg.dev/digital-node-1176/bmwadforth-docker/bmwadforth-backend:latest'
+          service: 'bmwadforth-blogwebsite'
+          image: 'australia-southeast2-docker.pkg.dev/digital-node-1176/bmwadforth-docker/bmwadforth-blogwebsite:latest'

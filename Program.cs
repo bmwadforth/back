@@ -17,6 +17,10 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+
+builder.Services.AddControllersWithViews();
+
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
 
@@ -70,6 +74,7 @@ builder.Configuration.AddEnvironmentVariables(prefix: "BMWADFORTH_");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
@@ -80,11 +85,15 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+} else
+{
+    //see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseCors(configurePolicy =>
 {
-    configurePolicy.WithOrigins("http://localhost:3000");
+    configurePolicy.WithOrigins("https://localhost:44401");
 });
 
 app.UseHttpsRedirection();
@@ -93,5 +102,16 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action=Index}/{id?}");
+
+app.MapFallbackToFile("index.html"); ;
 
 app.Run();
