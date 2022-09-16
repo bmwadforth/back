@@ -16,6 +16,8 @@ POSTGRES_DB=[DATABASE]
 4. Run the following command ```dotnet ef database update``` to ensure the migrations are applied to the database
 5. Run the following command ```dotnet run``` to start the web server
 
+### Frontend (Client App)
+The frontend is sitting under ```ClientApp``` as a git submodule. When you clone this repository, make sure you clone recursively as to include the frontend repository. Simply starting the .NET app in an IDE (dotnet run) is sufficient enough to start the necessary scripts to launch the frontend and the backend together. 
 
 ## Configuration
 In the ```appsettings.json``` file, you will need to at the bare-minimum supply a connection string under ````ConnectionStrings:Database````. You will also need to populate the ````Blob```` section with the bucket & folder.
@@ -27,5 +29,4 @@ This project uses entity framework to manage the data layer.
 Run the following command ```dotnet ef migrations add <migration_name>``` to add new migrations to the project
 
 ## Deployment
-
-When the master branch changes, google cloud platforms cloud run service will automatically detect the change, use the ```Dockerfile``` in the project to build an image, and then deploy that image.  
+When you merge into master, the github workflow located in the ```.github``` folder will run. It will build, publish and then deploy a docker image. The docker image simply builds the react app for production, then builds the .NET app, and puts their assets into a dockerfile. This dockerfile is then executed on google cloud platform cloud run.
