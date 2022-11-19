@@ -1,7 +1,7 @@
 using System.Net;
-using Bmwadforth.Common.Interfaces;
+using BlogWebsite.Common.Interfaces;
 
-namespace Bmwadforth.Common.Response;
+namespace BlogWebsite.Common.Response;
 
 public class ApiResponse<T> : IApiResponse<T>
 {

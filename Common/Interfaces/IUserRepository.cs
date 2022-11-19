@@ -1,7 +1,7 @@
 
-using Bmwadforth.Common.Models;
+using BlogWebsite.Common.Models;
 
-namespace Bmwadforth.Common.Interfaces;
+namespace BlogWebsite.Common.Interfaces;
 
 public interface IUserRepository
 {

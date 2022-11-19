@@ -1,8 +1,7 @@
-
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Bmwadforth.Common.Interfaces;
+namespace BlogWebsite.Common.Interfaces;
 
 public interface IJwtAuthenticationService
 {

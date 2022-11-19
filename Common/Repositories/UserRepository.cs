@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Bmwadforth.Common.Exceptions;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Models;
+using BlogWebsite.Common.Exceptions;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bmwadforth.Repositories;
+namespace BlogWebsite.Common.Repositories;
 
 public class UserRepository : IUserRepository
 {

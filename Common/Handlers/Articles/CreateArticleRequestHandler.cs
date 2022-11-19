@@ -1,10 +1,9 @@
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Models;
-using Bmwadforth.Common.Request;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Request;
+using BlogWebsite.Common.Response;
 using MediatR;
 
-namespace Bmwadforth.Handlers;
+namespace BlogWebsite.Common.Handlers.Articles;
 
 public sealed record CreateArticleRequest(CreateArticleDto Article) : IRequest<IApiResponse<int>>;
 

@@ -1,13 +1,12 @@
-using Bmwadforth.Handlers;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Request;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Handlers.Articles;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Request;
+using BlogWebsite.Common.Response;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bmwadforth.Controllers;
+namespace BlogWebsite.Controllers;
 
 [ApiController]
 [Route("/api/v1/article")]
@@ -26,7 +25,7 @@ public class ArticleController : ApiController<ArticleController>
     [HttpGet("{articleId}")]
     public async Task<IApiResponse<ArticleDto>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));
 
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize]
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromBody] CreateArticleDto request) => await _Mediator.Send(new CreateArticleRequest(request));
 

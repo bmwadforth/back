@@ -1,9 +1,9 @@
 using System.Net;
-using Bmwadforth.Common.Exceptions;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Exceptions;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Response;
 
-namespace Bmwadforth.Common.Middleware;
+namespace BlogWebsite.Common.Middleware;
 
 public class ExceptionMiddleware
 {

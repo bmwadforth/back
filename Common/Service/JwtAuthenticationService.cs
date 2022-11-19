@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Bmwadforth.Common.Configuration;
-using Bmwadforth.Common.Interfaces;
+using BlogWebsite.Common.Configuration;
+using BlogWebsite.Common.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Bmwadforth.Service;
+namespace BlogWebsite.Common.Service;
 
 public class JwtAuthenticationService : IJwtAuthenticationService
 {

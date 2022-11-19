@@ -1,8 +1,8 @@
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Response;
 using MediatR;
 
-namespace Bmwadforth.Handlers;
+namespace BlogWebsite.Common.Handlers.Articles;
 
 public sealed record CreateArticleThumbnailRequest(int ArticleId, string ContentType, Stream Source) : IRequest<IApiResponse<int>>;
 

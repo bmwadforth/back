@@ -1,8 +1,8 @@
-using Bmwadforth.Common.Models;
-using Bmwadforth.Common.Request;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Models;
+using BlogWebsite.Common.Request;
+using BlogWebsite.Common.Response;
 
-namespace Bmwadforth.Common.Interfaces;
+namespace BlogWebsite.Common.Interfaces;
 
 public interface IArticleRepository
 {

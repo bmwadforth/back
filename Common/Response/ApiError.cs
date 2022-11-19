@@ -1,6 +1,6 @@
-using Bmwadforth.Common.Interfaces;
+using BlogWebsite.Common.Interfaces;
 
-namespace Bmwadforth.Common.Response;
+namespace BlogWebsite.Common.Response;
 
 internal class ApiError : IApiError {
     public ApiError(string code, string error)

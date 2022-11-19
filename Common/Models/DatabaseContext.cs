@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Bmwadforth.Common.Models;
+namespace BlogWebsite.Common.Models;
 
 public class DatabaseContext : DbContext
 {

@@ -1,6 +1,4 @@
-using System.Net;
-
-namespace Bmwadforth.Common.Interfaces;
+namespace BlogWebsite.Common.Interfaces;
 
 public interface IApiResponse<T>
 {

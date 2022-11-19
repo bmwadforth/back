@@ -1,11 +1,11 @@
 using System.Net;
-using Bmwadforth.Common.Configuration;
-using Bmwadforth.Common.Exceptions;
-using Bmwadforth.Common.Interfaces;
+using BlogWebsite.Common.Configuration;
+using BlogWebsite.Common.Exceptions;
+using BlogWebsite.Common.Interfaces;
 using Google;
 using Google.Cloud.Storage.V1;
 
-namespace Bmwadforth.Repositories;
+namespace BlogWebsite.Common.Repositories;
 
 public class BlobRepository : IBlobRepository
 {

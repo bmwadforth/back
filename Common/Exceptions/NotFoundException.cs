@@ -1,4 +1,4 @@
-namespace Bmwadforth.Common.Exceptions;
+namespace BlogWebsite.Common.Exceptions;
 
 public class NotFoundException: Exception
 {

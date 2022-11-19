@@ -3,13 +3,13 @@ using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BlogWebsite.Common.AuthenticationSchemes;
-using Bmwadforth.Common.Configuration;
-using Bmwadforth.Common.Exceptions;
-using Bmwadforth.Common.Middleware;
-using Bmwadforth.Repositories;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Models;
-using Bmwadforth.Service;
+using BlogWebsite.Common.Configuration;
+using BlogWebsite.Common.Exceptions;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Middleware;
+using BlogWebsite.Common.Models;
+using BlogWebsite.Common.Repositories;
+using BlogWebsite.Common.Service;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -64,24 +64,26 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        var cookie = new CookieBuilder
-        {
-            Name = "BMWADFORTH_COOKIE",
-            Domain = builder.Environment.IsDevelopment() ? "localhost" : ".bmwadforth.com",
-            Path = "/",
-            SecurePolicy = CookieSecurePolicy.Always,
-            SameSite = SameSiteMode.Strict
-        };
-        
-        options.ExpireTimeSpan = DateTimeOffset.Now.AddSeconds(5).TimeOfDay;
-        options.Cookie = cookie;
+        options.Cookie.Name = ".bmwadforth.cookie";
+        options.Cookie.Domain = builder.Environment.IsDevelopment() ? ".localhost" : ".bmwadforth";
+        options.Cookie.Path = "/";
+        options.Cookie.HttpOnly = false;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+        options.SlidingExpiration = false;
+        options.LoginPath = "/api/v1/user/login";
+        options.LogoutPath = "/api/v1/user/logout";
+
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = ctx =>
-                throw new AuthenticationException("Invalid authentication challenge", null)
+                throw new AuthenticationException("Invalid authentication challenge")
         };
     })
-    .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationDefaults.AuthenticationScheme, null);
+    .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(
+        ApiKeyAuthenticationDefaults.AuthenticationScheme, null);
 
 builder.Configuration.AddEnvironmentVariables(prefix: "BMWADFORTH_");
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

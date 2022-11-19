@@ -1,4 +1,4 @@
-namespace Bmwadforth.Common.Configuration;
+namespace BlogWebsite.Common.Configuration;
 
 public class ConnectionStringConfiguration
 {

@@ -1,11 +1,11 @@
 using BlogWebsite.Common.AuthenticationSchemes;
-using Bmwadforth.Handlers;
-using Bmwadforth.Common.Interfaces;
+using BlogWebsite.Common.Handlers.User;
+using BlogWebsite.Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bmwadforth.Controllers;
+namespace BlogWebsite.Controllers;
 
 [Authorize(AuthenticationSchemes = ApiKeyAuthenticationDefaults.AuthenticationScheme)]
 [ApiController]

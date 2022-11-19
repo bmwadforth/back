@@ -1,11 +1,11 @@
 using System.Security.Claims;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace Bmwadforth.Handlers;
+namespace BlogWebsite.Common.Handlers.User;
 
 public sealed record LoginUserRequest(string Username, string Password) : IRequest<IApiResponse<string>>;
 

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
-using Bmwadforth.Common.Exceptions;
+using BlogWebsite.Common.Exceptions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 

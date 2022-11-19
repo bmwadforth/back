@@ -1,8 +1,8 @@
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Response;
 using MediatR;
 
-namespace Bmwadforth.Handlers;
+namespace BlogWebsite.Common.Handlers.User;
 
 public sealed record CreateUserRequest(string Username, string Password) : IRequest<IApiResponse<int>>;
 
