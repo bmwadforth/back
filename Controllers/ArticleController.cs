@@ -3,6 +3,7 @@ using Bmwadforth.Common.Interfaces;
 using Bmwadforth.Common.Request;
 using Bmwadforth.Common.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ public class ArticleController : ApiController<ArticleController>
     [HttpGet("{articleId}")]
     public async Task<IApiResponse<ArticleDto>> Get([FromRoute] int articleId) => await _Mediator.Send(new GetArticleRequest(articleId));
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [HttpPost]
     public async Task<IApiResponse<int>> Create([FromBody] CreateArticleDto request) => await _Mediator.Send(new CreateArticleRequest(request));
 

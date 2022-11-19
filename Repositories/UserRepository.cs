@@ -34,7 +34,7 @@ public class UserRepository : IUserRepository
         return user;
     }
     
-    public async Task<string> LoginUser(string username, string password)
+    public async Task<(User, string)> LoginUser(string username, string password)
     {
         var user = await GetUserByUsername(username);
         var passwordMatches = _authenticationService.ValidateHash(password, user.Password);
@@ -51,7 +51,7 @@ public class UserRepository : IUserRepository
 
         var token = _authenticationService.GenerateToken(claims);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return (user ,new JwtSecurityTokenHandler().WriteToken(token));
     }
     
     public async Task<int> CreateUser(string username, string password)
