@@ -1,4 +1,4 @@
-namespace Bmwadforth.Common.Models;
+namespace BlogWebsite.Common.Models;
 
 public class BaseEntity{ 
     public DateTimeOffset CreatedDate { get; set; }

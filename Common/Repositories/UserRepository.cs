@@ -1,21 +1,21 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Bmwadforth.Common.Exceptions;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Models;
+using BlogWebsite.Common.Exceptions;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bmwadforth.Repositories;
+namespace BlogWebsite.Common.Repositories;
 
 public class UserRepository : IUserRepository
 {
     private readonly DatabaseContext _databaseContext;
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IJwtAuthenticationService _jwtAuthenticationService;
     
-    public UserRepository(DatabaseContext databaseContext, IAuthenticationService authenticationService)
+    public UserRepository(DatabaseContext databaseContext, IJwtAuthenticationService jwtAuthenticationService)
     {
         _databaseContext = databaseContext;
-        _authenticationService = authenticationService;
+        _jwtAuthenticationService = jwtAuthenticationService;
     }
 
     public async Task<User> GetUserById(int id)
@@ -34,14 +34,14 @@ public class UserRepository : IUserRepository
         return user;
     }
     
-    public async Task<string> LoginUser(string username, string password)
+    public async Task<(User, string)> LoginUser(string username, string password)
     {
         var user = await GetUserByUsername(username);
-        var passwordMatches = _authenticationService.ValidateHash(password, user.Password);
+        var passwordMatches = _jwtAuthenticationService.ValidateHash(password, user.Password);
 
         if (!passwordMatches)
         {
-            throw new UserAuthenticationException("user is not authorized");
+            throw new AuthenticationException("user is not authorized");
         }
 
         var claims = new List<Claim>()
@@ -49,9 +49,9 @@ public class UserRepository : IUserRepository
             new("user", user.UserId.ToString())
         };
 
-        var token = _authenticationService.GenerateToken(claims);
+        var token = _jwtAuthenticationService.GenerateToken(claims);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return (user ,new JwtSecurityTokenHandler().WriteToken(token));
     }
     
     public async Task<int> CreateUser(string username, string password)
@@ -59,7 +59,7 @@ public class UserRepository : IUserRepository
         var newUser = new User
         {
             Username = username,
-            Password = _authenticationService.HashPassword(password)
+            Password = _jwtAuthenticationService.HashPassword(password)
         };
 
         _databaseContext.Users.Add(newUser);

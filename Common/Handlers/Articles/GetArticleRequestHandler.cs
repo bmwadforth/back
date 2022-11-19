@@ -1,9 +1,8 @@
-using System.Net;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Response;
 using MediatR;
 
-namespace Bmwadforth.Handlers;
+namespace BlogWebsite.Common.Handlers.Articles;
 
 public sealed record GetArticleRequest(int ArticleId) : IRequest<IApiResponse<ArticleDto>>;
 

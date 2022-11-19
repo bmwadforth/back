@@ -1,12 +1,12 @@
-using Bmwadforth.Handlers;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Request;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Handlers.Articles;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Request;
+using BlogWebsite.Common.Response;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bmwadforth.Controllers;
+namespace BlogWebsite.Controllers;
 
 [ApiController]
 [Route("/api/v1/article")]

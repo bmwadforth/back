@@ -1,12 +1,12 @@
-using Bmwadforth.Common.Configuration;
-using Bmwadforth.Common.Exceptions;
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Models;
-using Bmwadforth.Common.Request;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Configuration;
+using BlogWebsite.Common.Exceptions;
+using BlogWebsite.Common.Interfaces;
+using BlogWebsite.Common.Models;
+using BlogWebsite.Common.Request;
+using BlogWebsite.Common.Response;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bmwadforth.Repositories;
+namespace BlogWebsite.Common.Repositories;
 
 public class ArticleRepository : IArticleRepository
 {

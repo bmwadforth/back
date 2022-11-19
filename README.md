@@ -28,5 +28,10 @@ This project uses entity framework to manage the data layer.
 ### Adding Migrations
 Run the following command ```dotnet ef migrations add <migration_name>``` to add new migrations to the project
 
+### Applying Migrations
+Applying migrations in production can be found [here](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli).
+
 ## Deployment
 When you merge into master, the github workflow located in the ```.github``` folder will run. It will build, publish and then deploy a docker image. The docker image simply builds the react app for production, then builds the .NET app, and puts their assets into a dockerfile. This dockerfile is then executed on google cloud platform cloud run.
+
+The cloud run instance sits behind Google cloud services including a load balancer and API gateway. 

@@ -1,4 +1,4 @@
-namespace Bmwadforth.Common.Request;
+namespace BlogWebsite.Common.Request;
 
 public class CreateArticleDto
 {

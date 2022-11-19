@@ -1,9 +1,7 @@
-using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Models;
-using Bmwadforth.Common.Response;
+using BlogWebsite.Common.Interfaces;
 using MediatR;
 
-namespace Bmwadforth.Handlers;
+namespace BlogWebsite.Common.Handlers.Articles;
 
 public sealed record GetArticleContentRequest(int ArticleId) : IRequest<(Stream, string)>;
 

@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bmwadforth.Controllers;
+namespace BlogWebsite.Controllers;
 
 [Route("/[controller]/[action]")]
 [ApiController]

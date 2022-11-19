@@ -1,17 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Bmwadforth.Common.Configuration;
-using Bmwadforth.Common.Interfaces;
+using BlogWebsite.Common.Configuration;
+using BlogWebsite.Common.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Bmwadforth.Service;
+namespace BlogWebsite.Common.Service;
 
-public class AuthenticationService : IAuthenticationService
+public class JwtAuthenticationService : IJwtAuthenticationService
 {
     private readonly AuthenticationConfiguration _authenticationConfiguration;
     
-    public AuthenticationService(IConfiguration configuration)
+    public JwtAuthenticationService(IConfiguration configuration)
     {
         _authenticationConfiguration = new AuthenticationConfiguration();
         configuration.Bind("Authentication", _authenticationConfiguration);

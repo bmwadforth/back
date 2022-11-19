@@ -1,6 +1,4 @@
-using Bmwadforth.Common.Interfaces;
-
-namespace Bmwadforth.Common.Response;
+namespace BlogWebsite.Common.Response;
 
 public class ArticleDto
 {

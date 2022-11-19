@@ -1,4 +1,4 @@
-namespace Bmwadforth.Common.Interfaces;
+namespace BlogWebsite.Common.Interfaces;
 
 public interface IApiError
 {
