@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BlogWebsite.Common.AuthenticationSchemes;
 using Bmwadforth.Common.Configuration;
 using Bmwadforth.Common.Exceptions;
 using Bmwadforth.Common.Middleware;
@@ -12,7 +13,6 @@ using Bmwadforth.Service;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -33,7 +33,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<BlobRepository>().As<IBlobRepository>();
     containerBuilder.RegisterType<ArticleRepository>().As<IArticleRepository>();
     containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
-    containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
+    containerBuilder.RegisterType<JwtAuthenticationService>().As<IJwtAuthenticationService>();
 });
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddDbContext<DatabaseContext>(options =>
@@ -59,7 +59,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Events = new JwtBearerEvents
         {
             OnChallenge = ctx =>
-                throw new UserAuthenticationException("Invalid authentication challenge", ctx.AuthenticateFailure)
+                throw new AuthenticationException("Invalid authentication challenge", ctx.AuthenticateFailure)
         };
     })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
@@ -78,9 +78,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = ctx =>
-                throw new UserAuthenticationException("Invalid authentication challenge", null)
+                throw new AuthenticationException("Invalid authentication challenge", null)
         };
-    });
+    })
+    .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationDefaults.AuthenticationScheme, null);
 
 builder.Configuration.AddEnvironmentVariables(prefix: "BMWADFORTH_");
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -103,13 +104,23 @@ else
     app.UseHsts();
 }
 
-app.UseCors(configurePolicy => { configurePolicy.WithOrigins("https://localhost:44401"); });
-app.UseAuthentication();
-app.UseRouting();
-app.UseAuthorization();
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-app.UseHttpsRedirection();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.MapFallbackToFile("index.html");
+// app.UseCookiePolicy();
+
+app.UseRouting();
+// app.UseRequestLocalization();
+app.UseCors(configurePolicy => { configurePolicy.WithOrigins("https://localhost:44401"); });
+
+app.UseAuthentication();
+app.UseAuthorization();
+// app.UseSession();
+// app.UseResponseCompression();
+// app.UseResponseCaching();
+
+//app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.Run();

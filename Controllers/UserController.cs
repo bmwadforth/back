@@ -1,15 +1,13 @@
-using System.Net;
+using BlogWebsite.Common.AuthenticationSchemes;
 using Bmwadforth.Handlers;
-using Bmwadforth.Common.Middleware;
 using Bmwadforth.Common.Interfaces;
-using Bmwadforth.Common.Request;
-using Bmwadforth.Common.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bmwadforth.Controllers;
 
-[ApiKey]
+[Authorize(AuthenticationSchemes = ApiKeyAuthenticationDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("/api/v1/user")]
 public class UserController : ApiController<UserController>

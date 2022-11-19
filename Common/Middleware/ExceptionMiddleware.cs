@@ -2,8 +2,6 @@ using System.Net;
 using Bmwadforth.Common.Exceptions;
 using Bmwadforth.Common.Interfaces;
 using Bmwadforth.Common.Response;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Bmwadforth.Common.Middleware;
 
@@ -23,7 +21,6 @@ public class ExceptionMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        HttpStatusCode statusCode;
         var errors = new List<IApiError>();
         var response = new ApiResponse<object?>("An error has occurred", null, errors);
 
@@ -38,6 +35,7 @@ public class ExceptionMiddleware
 
             if (_hostEnvironment.IsDevelopment()) throw;
 
+            HttpStatusCode statusCode;
             switch (e)
             {
                 case ValidationException validationException:
@@ -45,7 +43,7 @@ public class ExceptionMiddleware
                     statusCode = HttpStatusCode.BadRequest;
                     break;
                 }
-                case UserAuthenticationException userAuthenticationException:
+                case AuthenticationException userAuthenticationException:
                 {
                     statusCode = HttpStatusCode.Unauthorized;
                     break;

@@ -10,12 +10,12 @@ namespace Bmwadforth.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly DatabaseContext _databaseContext;
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IJwtAuthenticationService _jwtAuthenticationService;
     
-    public UserRepository(DatabaseContext databaseContext, IAuthenticationService authenticationService)
+    public UserRepository(DatabaseContext databaseContext, IJwtAuthenticationService jwtAuthenticationService)
     {
         _databaseContext = databaseContext;
-        _authenticationService = authenticationService;
+        _jwtAuthenticationService = jwtAuthenticationService;
     }
 
     public async Task<User> GetUserById(int id)
@@ -37,11 +37,11 @@ public class UserRepository : IUserRepository
     public async Task<(User, string)> LoginUser(string username, string password)
     {
         var user = await GetUserByUsername(username);
-        var passwordMatches = _authenticationService.ValidateHash(password, user.Password);
+        var passwordMatches = _jwtAuthenticationService.ValidateHash(password, user.Password);
 
         if (!passwordMatches)
         {
-            throw new UserAuthenticationException("user is not authorized");
+            throw new AuthenticationException("user is not authorized");
         }
 
         var claims = new List<Claim>()
@@ -49,7 +49,7 @@ public class UserRepository : IUserRepository
             new("user", user.UserId.ToString())
         };
 
-        var token = _authenticationService.GenerateToken(claims);
+        var token = _jwtAuthenticationService.GenerateToken(claims);
 
         return (user ,new JwtSecurityTokenHandler().WriteToken(token));
     }
@@ -59,7 +59,7 @@ public class UserRepository : IUserRepository
         var newUser = new User
         {
             Username = username,
-            Password = _authenticationService.HashPassword(password)
+            Password = _jwtAuthenticationService.HashPassword(password)
         };
 
         _databaseContext.Users.Add(newUser);

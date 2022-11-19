@@ -7,11 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Bmwadforth.Service;
 
-public class AuthenticationService : IAuthenticationService
+public class JwtAuthenticationService : IJwtAuthenticationService
 {
     private readonly AuthenticationConfiguration _authenticationConfiguration;
     
-    public AuthenticationService(IConfiguration configuration)
+    public JwtAuthenticationService(IConfiguration configuration)
     {
         _authenticationConfiguration = new AuthenticationConfiguration();
         configuration.Bind("Authentication", _authenticationConfiguration);

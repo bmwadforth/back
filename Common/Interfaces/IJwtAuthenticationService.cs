@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Bmwadforth.Common.Interfaces;
 
-public interface IAuthenticationService
+public interface IJwtAuthenticationService
 {
     JwtSecurityToken GenerateToken(List<Claim> authClaims);
     string HashPassword(string password);
