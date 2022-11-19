@@ -121,6 +121,7 @@ app.UseAuthorization();
 // app.UseResponseCaching();
 
 //app.MapRazorPages();
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
