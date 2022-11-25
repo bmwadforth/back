@@ -65,7 +65,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
         options.Cookie.Name = ".bmwadforth.cookie";
-        options.Cookie.Domain = builder.Environment.IsDevelopment() ? ".localhost" : ".bmwadforth";
+        options.Cookie.Domain = builder.Environment.IsDevelopment() ? ".localhost" : ".bmwadforth.com";
         options.Cookie.Path = "/";
         options.Cookie.HttpOnly = false;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
