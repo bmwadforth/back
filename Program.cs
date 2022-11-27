@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -21,7 +22,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAntiforgery();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddControllersWithViews();
 builder.Host.UseSerilog((ctx, lc) => lc
     .ReadFrom.Configuration(ctx.Configuration));
@@ -30,6 +30,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 // Call ConfigureContainer on the Host sub property 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
+    containerBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
     containerBuilder.RegisterType<BlobRepository>().As<IBlobRepository>();
     containerBuilder.RegisterType<ArticleRepository>().As<IArticleRepository>();
     containerBuilder.RegisterType<UserRepository>().As<IUserRepository>();
@@ -64,7 +65,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        options.Cookie.Name = ".bmwadforth.cookie";
         options.Cookie.Domain = builder.Environment.IsDevelopment() ? ".localhost" : ".bmwadforth.com";
         options.Cookie.Path = "/";
         options.Cookie.HttpOnly = false;
@@ -73,13 +73,30 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = false;
-        options.LoginPath = "/api/v1/user/login";
-        options.LogoutPath = "/api/v1/user/logout";
+        options.LoginPath = builder.Environment.IsDevelopment() ? "/api/v1/user/login" : "/v1/blog/user/login";
+        options.LogoutPath = builder.Environment.IsDevelopment() ? "/api/v1/user/logout" : "/v1/blog/user/logout";
 
         options.Events = new CookieAuthenticationEvents
         {
             OnRedirectToLogin = ctx =>
-                throw new AuthenticationException("Invalid authentication challenge")
+                throw new AuthenticationException("Invalid authentication challenge"),
+            OnValidatePrincipal = ctx =>
+            {
+                // TODO: How can we resolve this service using autofac?
+                var tokenService = new JwtAuthenticationService(builder.Configuration);
+                
+                var token = ctx.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
+                if (token?.Value != null)
+                {
+                    if (!tokenService.ValidateToken(token.Value)) ctx.RejectPrincipal();
+                }
+                else
+                {
+                    ctx.RejectPrincipal();
+                }
+
+                return Task.CompletedTask;
+            }
         };
     })
     .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(
