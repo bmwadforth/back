@@ -5,7 +5,8 @@ namespace BlogWebsite.Common.Interfaces;
 
 public interface IJwtAuthenticationService
 {
-    JwtSecurityToken GenerateToken(List<Claim> authClaims);
+    JwtSecurityToken GenerateToken(IEnumerable<Claim> authClaims);
+    bool ValidateToken(string token);
     string HashPassword(string password);
     bool ValidateHash(string password, string hash);
 }

@@ -17,7 +17,7 @@ public class JwtAuthenticationService : IJwtAuthenticationService
         configuration.Bind("Authentication", _authenticationConfiguration);
     }
     
-    public JwtSecurityToken GenerateToken(List<Claim> authClaims)
+    public JwtSecurityToken GenerateToken(IEnumerable<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationConfiguration.Key));
 
@@ -30,6 +30,29 @@ public class JwtAuthenticationService : IJwtAuthenticationService
         );
 
         return token;
+    }
+
+    public bool ValidateToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        try
+        {
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_authenticationConfiguration.Key)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                ClockSkew = TimeSpan.Zero
+            }, out _);
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
     
     public string HashPassword(string password) => BCrypt.Net.BCrypt.HashPassword(password);
