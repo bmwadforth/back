@@ -39,7 +39,8 @@ jobs:
         run: dotnet test --no-build --verbosity normal
       - name: Generate SQL
         run: |
-          dotnet tool install --global dotnet-ef
+          cd ./src
+          dotnet tool install --project ./src --global dotnet-ef
           dotnet ef migrations script -o ./bin/database.sql
 
       - name: Archive Artifacts
