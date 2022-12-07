@@ -29,7 +29,7 @@ jobs:
 
       - id: 'npm-auth'
         name: 'Authenticate to GCP Artifact Registry'
-        run: npx google-artifactregistry-auth ./ClientApp/.npmrc          
+        run: npx google-artifactregistry-auth ./src/ClientApp/.npmrc          
 
       - name: Restore dependencies
         run: dotnet restore
@@ -78,7 +78,7 @@ jobs:
 
       - id: 'npm-auth'
         name: 'Authenticate to GCP Artifact Registry'
-        run: npx google-artifactregistry-auth ./ClientApp/.npmrc                    
+        run: npx google-artifactregistry-auth ./src/ClientApp/.npmrc                    
 
       - id: 'sdk'
         name: 'Setup Google Cloud SDK'
@@ -127,7 +127,7 @@ jobs:
 
       - id: 'npm-auth'
         name: 'Authenticate to GCP Artifact Registry'
-        run: npx google-artifactregistry-auth ./ClientApp/.npmrc                    
+        run: npx google-artifactregistry-auth ./src/ClientApp/.npmrc                    
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v0'
