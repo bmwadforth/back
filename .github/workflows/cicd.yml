@@ -48,7 +48,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            bin
+            ./src/bin
           retention-days: 1
 
   publish:
