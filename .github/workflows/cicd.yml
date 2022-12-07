@@ -40,7 +40,7 @@ jobs:
       - name: Generate SQL
         run: |
           cd ./src
-          dotnet tool install --project ./src --global dotnet-ef
+          dotnet tool install --global dotnet-ef
           dotnet ef migrations script -o ./bin/database.sql
 
       - name: Archive Artifacts
