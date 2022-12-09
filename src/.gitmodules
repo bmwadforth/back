@@ -1,3 +1,0 @@
-[submodule "ClientApp"]
-	path = ClientApp
-	url = git@github.com:bmwadforth/front.git
