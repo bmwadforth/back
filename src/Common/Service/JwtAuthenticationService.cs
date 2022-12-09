@@ -13,8 +13,7 @@ public class JwtAuthenticationService : IJwtAuthenticationService
 
     public JwtAuthenticationService(IConfiguration configuration)
     {
-        _authenticationConfiguration = new AuthenticationConfiguration();
-        configuration.Bind("Authentication", _authenticationConfiguration);
+        _authenticationConfiguration = configuration.GetSection("Authentication").Get<AuthenticationConfiguration>();
     }
 
     public JwtSecurityToken GenerateToken(IEnumerable<Claim> authClaims)
