@@ -29,7 +29,7 @@ jobs:
 
       - id: 'npm-auth'
         name: 'Authenticate to GCP Artifact Registry'
-        run: npx google-artifactregistry-auth ./ClientApp/.npmrc          
+        run: npx google-artifactregistry-auth ./src/ClientApp/.npmrc          
 
       - name: Restore dependencies
         run: dotnet restore
@@ -39,6 +39,7 @@ jobs:
         run: dotnet test --no-build --verbosity normal
       - name: Generate SQL
         run: |
+          cd ./src
           dotnet tool install --global dotnet-ef
           dotnet ef migrations script -o ./bin/database.sql
 
@@ -47,7 +48,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            bin
+            ./src/bin
           retention-days: 1
 
   publish:
@@ -78,7 +79,7 @@ jobs:
 
       - id: 'npm-auth'
         name: 'Authenticate to GCP Artifact Registry'
-        run: npx google-artifactregistry-auth ./ClientApp/.npmrc                    
+        run: npx google-artifactregistry-auth ./src/ClientApp/.npmrc                    
 
       - id: 'sdk'
         name: 'Setup Google Cloud SDK'
@@ -127,7 +128,7 @@ jobs:
 
       - id: 'npm-auth'
         name: 'Authenticate to GCP Artifact Registry'
-        run: npx google-artifactregistry-auth ./ClientApp/.npmrc                    
+        run: npx google-artifactregistry-auth ./src/ClientApp/.npmrc                    
 
       - id: 'deploy'
         uses: 'google-github-actions/deploy-cloudrun@v0'
