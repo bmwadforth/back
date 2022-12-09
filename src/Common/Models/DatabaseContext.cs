@@ -4,11 +4,12 @@ namespace BlogWebsite.Common.Models;
 
 public class DatabaseContext : DbContext
 {
+    public DatabaseContext() {}
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
-    public DbSet<Article> Articles { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Project> Projects { get; set; }
+    public virtual DbSet<Article> Articles { get; set; }
+    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Project> Projects { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

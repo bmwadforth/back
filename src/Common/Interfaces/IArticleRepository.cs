@@ -10,6 +10,7 @@ public interface IArticleRepository
     Task<ArticleDto?> GetArticleById(int id);
     Task<List<ArticleDto>> GetArticles();
     Task<int> NewArticle(CreateArticleDto article);
+    Task PublishArticle(int id);
     Task UpdateArticle(Article article);
     Task<(Stream, string)> GetArticleContent(int id);
     Task NewArticleContent(int id, string contentType, Stream source);

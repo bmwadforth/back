@@ -22,21 +22,21 @@ public class ArticleRepository : IArticleRepository
         configuration.GetSection("ConnectionStrings").Bind(_configuration);
     }
 
-    public async Task<Article> GetArticle(int id, bool includeUnpublished = false)
+    public Task<Article> GetArticle(int id, bool includeUnpublished = false)
     {
         Article? article;
         if (includeUnpublished)
         {
-            article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id);
+            article = _databaseContext.Articles.FirstOrDefault(a => a.ArticleId == id);
         }
         else
         {
-            article = await _databaseContext.Articles.FirstOrDefaultAsync(a => a.ArticleId == id && a.Published);
+            article = _databaseContext.Articles.FirstOrDefault(a => a.ArticleId == id && a.Published);
         }
 
         if (article == null) throw new NotFoundException($"article with {id} not found");
 
-        return article;
+        return Task.FromResult(article);
     }
 
     public async Task<ArticleDto?> GetArticleById(int id)
@@ -48,6 +48,7 @@ public class ArticleRepository : IArticleRepository
             ArticleId = article.ArticleId,
             Title = article.Title,
             Description = article.Description,
+            Published = article.Published,
             ContentId = article.ContentId,
             ThumbnailId = article.ThumbnailId,
             ThumbnailDataUrl = $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
@@ -57,23 +58,24 @@ public class ArticleRepository : IArticleRepository
         };
     }
 
-    public async Task<List<ArticleDto>> GetArticles()
+    public Task<List<ArticleDto>> GetArticles()
     {
-        var articles = await _databaseContext.Articles.ToListAsync();
+        var articles = _databaseContext.Articles.ToList();
 
-        return articles.Where(a => a.Published).Select(article => new ArticleDto
-        {
-            ArticleId = article.ArticleId,
-            Title = article.Title,
-            Description = article.Description,
-            ContentId = article.ContentId,
-            ThumbnailId = article.ThumbnailId,
-            ThumbnailDataUrl = article.ThumbnailId == null ? null : $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
-            ContentDataUrl = article.ContentId == null ? null : $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
-            CreatedDate = article.CreatedDate,
-            UpdatedDate = article.UpdatedDate
-        })
-            .ToList();
+        return Task.FromResult(articles.Where(a => a.Published).Select(article => new ArticleDto
+            {
+                ArticleId = article.ArticleId,
+                Title = article.Title,
+                Description = article.Description,
+                Published = article.Published,
+                ContentId = article.ContentId,
+                ThumbnailId = article.ThumbnailId,
+                ThumbnailDataUrl = article.ThumbnailId == null ? null : $"{_configuration.ContentDeliveryNetwork}/{article.ThumbnailId}",
+                ContentDataUrl = article.ContentId == null ? null : $"{_configuration.ContentDeliveryNetwork}/{article.ContentId}",
+                CreatedDate = article.CreatedDate,
+                UpdatedDate = article.UpdatedDate
+            })
+            .ToList());
     }
 
     public async Task<(Stream, string)> GetArticleContent(int id)
@@ -128,5 +130,12 @@ public class ArticleRepository : IArticleRepository
         _databaseContext.Articles.Add(newArticle);
         await _databaseContext.SaveChangesAsync();
         return newArticle.ArticleId;
+    }
+
+    public async Task PublishArticle(int id)
+    {
+        var article = await GetArticle(id, true);
+        article.Published = true;
+        await _databaseContext.SaveChangesAsync();
     }
 }
