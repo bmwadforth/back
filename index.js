@@ -8,6 +8,7 @@ import commentsRouter from './src/routes/comment.js';
 import { connectDatabase } from './src/data';
 import cors from 'cors';
 
+
 (async function () {
   try {
     await connectDatabase();
