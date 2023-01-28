@@ -6,6 +6,7 @@ using BlogWebsite.Common.Exceptions;
 using BlogWebsite.Common.Interfaces;
 using BlogWebsite.Common.Middleware;
 using BlogWebsite.Common.Models;
+using BlogWebsite.Common.Models.Common;
 using BlogWebsite.Common.Repositories;
 using BlogWebsite.Common.Service;
 using MediatR;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Serilog;
 using System.Reflection;
 using System.Security.Claims;
@@ -65,7 +67,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     })
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        options.Cookie.Domain = builder.Environment.IsDevelopment() ? ".localhost" : ".bmwadforth.com";
+        options.Cookie.Domain = builder.Environment.IsDevelopment() ? "localhost" : ".bmwadforth.com";
         options.Cookie.Path = "/";
         options.Cookie.HttpOnly = false;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -85,10 +87,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 // TODO: How can we resolve this service using autofac?
                 var tokenService = new JwtAuthenticationService(builder.Configuration);
 
-                var token = ctx.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
-                if (token?.Value != null)
+                var userDataString = ctx.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
+                if (userDataString?.Value != null)
                 {
-                    if (!tokenService.ValidateToken(token.Value)) ctx.RejectPrincipal();
+                    var userData = JsonConvert.DeserializeObject<UserData>(userDataString.Value);
+                    if (!tokenService.ValidateToken(userData.Token)) ctx.RejectPrincipal();
+                    ctx.HttpContext.Items["UserData"] = userData;
                 }
                 else
                 {
@@ -129,11 +133,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 // app.UseRequestLocalization();
-app.UseCors(configurePolicy => { configurePolicy.WithOrigins("https://localhost:44401"); });
+app.UseCors(configurePolicy => {
+    configurePolicy.AllowAnyHeader();
+    configurePolicy.WithOrigins("https://localhost:44401");
+    configurePolicy.AllowCredentials();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
-// app.UseSession();
 // app.UseResponseCompression();
 // app.UseResponseCaching();
 
