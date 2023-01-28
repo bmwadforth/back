@@ -46,7 +46,8 @@ public class UserRepository : IUserRepository
 
         var claims = new List<Claim>()
         {
-            new("user", user.UserId.ToString())
+            new("user", user.UserId.ToString()),
+            new("username", user.Username)
         };
 
         var token = _jwtAuthenticationService.GenerateToken(claims);

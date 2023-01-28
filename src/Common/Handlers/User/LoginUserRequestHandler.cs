@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
+using BlogWebsite.Common.Models.Common;
+using Newtonsoft.Json;
 
 namespace BlogWebsite.Common.Handlers.User;
 
@@ -24,16 +26,24 @@ public class LoginUserRequestHandler : IRequestHandler<LoginUserRequest, IApiRes
     {
         var (user, token) = await _repository.LoginUser(request.Username, request.Password);
 
+        var userData = new UserData
+        {
+            UserName = user.Username,
+            Token = token,
+            LoggedInSince = DateTimeOffset.Now,
+        };
+
+        var userDataString = JsonConvert.SerializeObject(userData);
+
         var claimsIdentity = new ClaimsIdentity(new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.UserData, token)
+            new Claim(ClaimTypes.UserData, userDataString),
         }, CookieAuthenticationDefaults.AuthenticationScheme);
 
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
         await _httpContext.HttpContext?.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-        return new ApiResponse<string>("success", null, null);
+        return new ApiResponse<string>("success", token, null);
     }
 }
